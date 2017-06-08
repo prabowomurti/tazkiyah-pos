@@ -74,10 +74,14 @@ class SiteController extends Controller
             return $this->goHome();
         }
 
+        $this->layout = 'login';
+
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        if ($model->load(Yii::$app->request->post()) && $model->backendLogin()) {
             return $this->goBack();
-        } else {
+        } 
+        else 
+        {
             return $this->render('login', [
                 'model' => $model,
             ]);

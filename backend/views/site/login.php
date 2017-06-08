@@ -8,28 +8,36 @@ use yii\helpers\Html;
 use yii\bootstrap\ActiveForm;
 
 $this->title = 'Login';
-$this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="site-login">
-    <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>Please fill out the following fields to login:</p>
+<?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
 
-    <div class="row">
-        <div class="col-lg-5">
-            <?php $form = ActiveForm::begin(['id' => 'login-form']); ?>
+    <h1>Login Form</h1>
 
-                <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
+    <?= $form->field($model, 'email')->textInput(['autofocus' => true, 'placeholder' => 'Email'])->label(false); ?>
 
-                <?= $form->field($model, 'password')->passwordInput() ?>
+    <?= $form->field($model, 'password')->passwordInput(['placeholder' => 'Password'])->label(false); ?>
 
-                <?= $form->field($model, 'rememberMe')->checkbox() ?>
+    <div>
+        <?= Html::submitButton('Log In', ['class' => 'btn btn-default', 'name' => 'login-button', 'style' => 'margin: 10px 50px 0px 0px; font-size: 12px']) ?>
+        <?= Html::a(Yii::t('app', 'Lost your password?'), Yii::$app->urlManager->createUrl('/site/request-password-reset'));?>
+    </div>
 
-                <div class="form-group">
-                    <?= Html::submitButton('Login', ['class' => 'btn btn-primary', 'name' => 'login-button']) ?>
-                </div>
+    <div class="clearfix"></div>
 
-            <?php ActiveForm::end(); ?>
+    <div class="separator">
+        <p class="change_link">New to site?
+            <a href="#signup" class="to_register"> Create Account </a>
+        </p>
+
+        <div class="clearfix"></div>
+        <br />
+
+        <div>
+            <h1><i class="fa fa-leaf"></i> <?= Yii::$app->name;?></h1>
+            <p>&copy;2017 All Rights Reserved.</p>
         </div>
     </div>
-</div>
+
+<?php ActiveForm::end(); ?>
+        
