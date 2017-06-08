@@ -101,4 +101,4 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 
 </div>
 
-<?='<?='?> $this->render('//layouts/js/_multipledelete_script');?>
+<?='<?='?> $this->registerJsFile('@web/js/multipledelete.js', ['depends' => [\yii\web\JqueryAsset::className()]]); ?>
