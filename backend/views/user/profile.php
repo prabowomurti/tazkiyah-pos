@@ -14,7 +14,6 @@ $this->title = Yii::t('app', 'Update Profile');
 ?>
 <div class="user-update">
 
-    <h1><?= Html::encode($this->title) ?> </h1>
     <?= $success ? 
     yii\bootstrap\Alert::widget([
         'options' => [
