@@ -27,7 +27,7 @@ $bundle = common\components\assets\Asset::register($this);
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
 </head>
-<body class="nav-md footer_fixed sidebar_fixed" >
+<body class="nav-md">
 <?php $this->beginBody(); ?>
 <div class="container body">
 
@@ -287,7 +287,13 @@ $bundle = common\components\assets\Asset::register($this);
             <?php endif; ?>
             <div class="clearfix"></div>
 
-            <?= $content ?>
+            <div class="x_panel">
+                <div class="x_title"><h2><?= Html::encode($this->title)?></h2><div class="clearfix"></div></div>
+                <div class="x_content">
+                    <?= $content ?>
+                </div>
+            </div>
+
         </div>
         <!-- /page content -->
         <!-- footer content -->
