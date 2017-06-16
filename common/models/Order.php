@@ -41,7 +41,6 @@ class Order extends \common\components\coremodels\ZeedActiveRecord
     {
         return [
             [['customer_id', 'outlet_id', 'tax', 'total_price', 'delivery_time', 'created_at', 'updated_at'], 'integer'],
-            [['created_at', 'updated_at'], 'required'],
             [['code'], 'string', 'max' => 20],
             [['status'], 'string', 'max' => 50],
             [['note'], 'string', 'max' => 255],

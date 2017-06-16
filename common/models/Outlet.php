@@ -20,6 +20,16 @@ use Yii;
  */
 class Outlet extends \common\components\coremodels\ZeedActiveRecord
 {
+    const STATUS_ACTIVE = 'active';
+    const STATUS_INACTIVE = 'inactive';
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [];
+    }
     /**
      * @inheritdoc
      */
@@ -82,5 +92,28 @@ class Outlet extends \common\components\coremodels\ZeedActiveRecord
     public static function find()
     {
         return new \common\models\activequery\OutletQuery(get_called_class());
+    }
+
+    public static function getStatusAsList($index = '')
+    {
+        $return = [
+            static::STATUS_INACTIVE => Yii::t('app', 'Inactive'), 
+            static::STATUS_ACTIVE => Yii::t('app', 'Active')
+        ];
+
+        return (empty($index) ? $return : $return[$index]);
+    }
+
+    /**
+     * Get all outlet as list used in dropdown
+     * @return array of object 
+     */
+    public static function getAllAslist()
+    {
+        return self::find()->
+            select(['label', 'id'])->
+            orderBy('label')->
+            indexBy('id')->
+            column();
     }
 }

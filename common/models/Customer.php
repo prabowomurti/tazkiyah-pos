@@ -19,6 +19,9 @@ use Yii;
  */
 class Customer extends \common\components\coremodels\ZeedActiveRecord
 {
+    const GENDER_MALE   = 'male';
+    const GENDER_FEMALE = 'female';
+
     /**
      * @inheritdoc
      */
@@ -33,7 +36,7 @@ class Customer extends \common\components\coremodels\ZeedActiveRecord
     public function rules()
     {
         return [
-            [['username', 'created_at', 'updated_at'], 'required'],
+            [['username'], 'required'],
             [['address'], 'string'],
             [['created_at', 'updated_at'], 'integer'],
             [['username', 'phone'], 'string', 'max' => 255],
@@ -72,5 +75,17 @@ class Customer extends \common\components\coremodels\ZeedActiveRecord
     public static function find()
     {
         return new \common\models\activequery\CustomerQuery(get_called_class());
+    }
+
+    /**
+     * Get gender as list
+     * @param  string $index [description]
+     * @return array
+     */
+    public static function genderAsList($index = '')
+    {
+        $return = [static::GENDER_MALE => 'Male', static::GENDER_FEMALE => 'Female'];
+
+        return (empty($index) ? $return : $return[$index]);
     }
 }

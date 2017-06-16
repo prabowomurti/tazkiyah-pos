@@ -4,6 +4,8 @@ namespace common\models;
 
 use Yii;
 
+use creocoder\nestedsets\NestedSetsBehavior;
+
 /**
  * This is the model class for table "attribute".
  *
@@ -34,10 +36,58 @@ class Attribute extends \common\components\coremodels\ZeedActiveRecord
     public function rules()
     {
         return [
-            [['label', 'lft', 'rgt', 'depth'], 'required'],
+            [['label'], 'required'],
             [['tree', 'lft', 'rgt', 'depth', 'position'], 'integer'],
+            [['position'], 'default', 'value' => 0],
             [['label'], 'string', 'max' => 255],
         ];
+    }
+
+    public function behaviors() {
+        return [
+            'tree' => [
+                'class' => NestedSetsBehavior::className(),
+                'treeAttribute' => 'tree',
+                // 'leftAttribute' => 'lft',
+                // 'rightAttribute' => 'rgt',
+                // 'depthAttribute' => 'depth',
+            ],
+        ];
+    }
+
+    public function transactions()
+    {
+        return [
+            self::SCENARIO_DEFAULT => self::OP_ALL,
+        ];
+    }
+
+    /**
+     * Get all tree as list, except the node itself and all the children
+     * @param integer $exception_id not include the ID
+     * @return array array of the tree
+     */
+    public static function getTree($exception_id = 0)
+    {
+        // don't include the node and the children
+        $children = [];
+        if ( ! empty($exception_id))
+            $children = array_merge(
+                self::findOne($exception_id)->children()->column(),
+                [$exception_id]);
+
+        // get full tree
+        $rows = self::find()->
+            select('id, label, depth')->
+            orderBy('tree, lft')->
+            where(['NOT IN', 'id', $children])->
+            all();
+
+        $return = [];
+        foreach ($rows as $row)
+            $return[$row->id] = str_repeat('-', $row->depth) . ' ' . $row->label;
+
+        return $return;
     }
 
     /**
@@ -46,12 +96,12 @@ class Attribute extends \common\components\coremodels\ZeedActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'label' => Yii::t('app', 'Label'),
-            'tree' => Yii::t('app', 'Tree'),
-            'lft' => Yii::t('app', 'Lft'),
-            'rgt' => Yii::t('app', 'Rgt'),
-            'depth' => Yii::t('app', 'Depth'),
+            'id'       => Yii::t('app', 'ID'),
+            'label'    => Yii::t('app', 'Label'),
+            'tree'     => Yii::t('app', 'Tree'),
+            'lft'      => Yii::t('app', 'Lft'),
+            'rgt'      => Yii::t('app', 'Rgt'),
+            'depth'    => Yii::t('app', 'Depth'),
             'position' => Yii::t('app', 'Position'),
         ];
     }
@@ -80,4 +130,24 @@ class Attribute extends \common\components\coremodels\ZeedActiveRecord
     {
         return new \common\models\activequery\AttributeQuery(get_called_class());
     }
+
+    /**
+     * Get parent's ID 
+     * @return integer ID of parent node
+     */
+    public function getParentId()
+    {
+        $parent = $this->getParent();
+        return $parent ? $parent->id : NULL ;
+    }
+
+    /**
+     * Get parent of node
+     * @return \yii\db\ActiveQuery
+     */
+    public function getParent()
+    {
+        return $this->parents(1)->one();
+    }
+    
 }

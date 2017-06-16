@@ -27,10 +27,19 @@ class Employee extends \common\components\coremodels\ZeedActiveRecord
     /**
      * @inheritdoc
      */
+    public function behaviors()
+    {
+        return [];
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function rules()
     {
         return [
             [['user_id', 'outlet_id'], 'integer'],
+            [['user_id'], 'unique'],
             [['outlet_id'], 'exist', 'skipOnError' => true, 'targetClass' => Outlet::className(), 'targetAttribute' => ['outlet_id' => 'id']],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];

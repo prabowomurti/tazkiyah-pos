@@ -267,4 +267,18 @@ class User extends ZeedActiveRecord implements IdentityInterface
     {
         return [static::STATUS_ACTIVE => 'Active', static::STATUS_DELETED => 'Deleted'];
     }
+
+    /**
+     * Get operator as list
+     * @return array array of operator
+     */
+    public static function getOperatorAsList()
+    {
+        return self::find()->
+            select(['username', 'id'])->
+            orderBy('username')->
+            where(['role' => static::ROLE_OPERATOR, 'status' => static::STATUS_ACTIVE])->
+            indexBy('id')->
+            column();
+    }
 }

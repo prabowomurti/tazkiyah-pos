@@ -35,7 +35,6 @@ class ProductAttribute extends \common\components\coremodels\ZeedActiveRecord
     {
         return [
             [['product_id', 'price', 'created_at', 'updated_at'], 'integer'],
-            [['created_at', 'updated_at'], 'required'],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
         ];
     }
@@ -65,7 +64,7 @@ class ProductAttribute extends \common\components\coremodels\ZeedActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getAttributes()
+    public function getTheAttributes() // can not use the reserved function "getAttributes()"
     {
         return $this->hasMany(Attribute::className(), ['id' => 'attribute_id'])->viaTable('attribute_combination', ['product_attribute_id' => 'id']);
     }
@@ -84,6 +83,67 @@ class ProductAttribute extends \common\components\coremodels\ZeedActiveRecord
     public function getProduct()
     {
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
+    }
+
+    /**
+     * Add attribute combination to attribute_combination table
+     * @param array $new_attributes new attribute IDs
+     * @return boolean success or not
+     */
+    public function addAttributes($new_attributes = [])
+    {
+        if ( ! is_array($new_attributes))
+            $new_attributes = [$new_attributes];
+
+        if (self::doesAttributeCombinationExist($this->product_id, $new_attributes))
+            return FALSE;
+
+        foreach ($new_attributes as $attribute_id)
+        {
+            if (empty($attribute_id)) continue;
+
+            $attribute = Attribute::findOne($attribute_id);
+            $this->link('theAttributes', $attribute);
+        }
+
+        return TRUE;
+    }
+
+    /**
+     * Checking if the combination of attributes already exist for the product
+     * @param integer $product_id product's ID
+     * @param  array  $attributes new attribute combination
+     * @return boolean 
+     */
+    public static function doesAttributeCombinationExist($product_id = 0, $attributes = [])
+    {
+        $query = self::find()->
+            select(['product_attribute_id', 'counter_attribute' => 'COUNT(DISTINCT attribute_id)'])->
+            innerJoin('attribute_combination ac', 'ac.product_attribute_id = ' . self::tableName() . '.id')->
+            where(['product_id' => (int) $product_id])->
+            groupBy('product_attribute_id')->
+            having(['counter_attribute' => count($attributes)])->
+            andHaving('SUM(attribute_id NOT IN (' . implode(',', $attributes) . ')) = 0');
+
+        return (boolean) $query->scalar();
+    }
+
+    /**
+     * Get attribute combination labels, for example : 
+     * Item A has 2 kinds of attributes : Size and Color
+     * Size : S, M, L; Color : Red, Green
+     * So the combination labels will be 
+     * "S, Red", 
+     * "S, Green", 
+     * "M, Red", and so on
+     * 
+     * @return string the labels concatenated by ', '
+     */
+    public function getAttributeCombinationLabel()
+    {
+        $attribute_combination = $this->getTheAttributes()->select('label')->orderBy('position')->column();
+
+        return implode(', ', $attribute_combination);
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace common\models\activequery;
 
+use creocoder\nestedsets\NestedSetsQueryBehavior;
+
 /**
  * This is the ActiveQuery class for [[\common\models\Attribute]].
  *
@@ -13,6 +15,12 @@ class AttributeQuery extends \common\components\coremodels\ZeedActiveQuery
     {
         return $this->andWhere('[[status]]=1');
     }*/
+
+    public function behaviors() {
+        return [
+            NestedSetsQueryBehavior::className(),
+        ];
+    }
 
     /**
      * @inheritdoc
@@ -31,4 +39,6 @@ class AttributeQuery extends \common\components\coremodels\ZeedActiveQuery
     {
         return parent::one($db);
     }
+
+
 }

@@ -35,8 +35,11 @@ class Product extends \common\components\coremodels\ZeedActiveRecord
     public function rules()
     {
         return [
-            [['label', 'created_at', 'updated_at'], 'required'],
+            [['label'], 'required'],
             [['price', 'visible', 'position', 'created_at', 'updated_at'], 'integer'],
+            [['position'], 'default', 'value' => 0],
+            [['price'], 'integer', 'min' => '0'],
+            [['price'], 'filter', 'filter' => 'intval'],
             [['label', 'description'], 'string', 'max' => 255],
         ];
     }
