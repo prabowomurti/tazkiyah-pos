@@ -18,5 +18,8 @@ return [
                 //...
             ]
         ],
+        'formatter' => [
+            'dateFormat' => 'Y-m-d H:i:s',
+        ]
     ],
 ];
