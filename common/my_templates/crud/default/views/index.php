@@ -13,7 +13,7 @@ echo "<?php\n";
 ?>
 
 use yii\helpers\Html;
-use <?= $generator->indexWidgetType === 'grid' ? "yii\\grid\\GridView" : "yii\\widgets\\ListView" ?>;
+use <?= $generator->indexWidgetType === 'grid' ? "common\\components\\widgets\\GridView" : "yii\\widgets\\ListView" ?>;
 <?= $generator->enablePjax ? 'use yii\widgets\Pjax;' : '' ?>
 
 /* @var $this yii\web\View */
@@ -32,8 +32,9 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= "<?= " ?>Html::a(<?= $generator->generateString('Create ' . Inflector::camel2words(StringHelper::basename($generator->modelClass))) ?>, ['create'], ['class' => 'btn btn-success']) ?>
 
-        <span class="pull-right btn btn-danger" id="delete_selected_items_btn" data-url="<?=Yii::$app->urlManager->createUrl(Yii::$app->controller->id . '/multipledelete');?>">Delete Selected</span>
+        <span class="pull-right btn btn-danger" id="delete_selected_items_btn" data-url="/<?= Inflector::camel2id(StringHelper::basename($generator->modelClass)) . '/multipledelete';?>">Delete Selected</span>
     </p>
+    <div class="table table-responsive">
 <?= $generator->enablePjax ? '    <?php Pjax::begin(); ?>' : '' ?>
 
 <?php if ($generator->indexWidgetType === 'grid'): ?>
@@ -41,10 +42,8 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         <?= !empty($generator->searchModelClass) ? "'filterModel' => \$searchModel,\n        'columns' => [\n" : "'columns' => [\n"; ?>
             [
-                'class'   => 'yii\grid\CheckboxColumn',
-                'options' => ['width' => '32px'],
+                'class'   => 'common\components\widgets\ZeedCheckboxColumn',
             ],
-            ['class' => 'yii\grid\SerialColumn'],
 
 <?php
 $count = 0;
@@ -98,6 +97,7 @@ if (($tableSchema = $generator->getTableSchema()) === false) {
 <?php endif; ?>
 <?= $generator->enablePjax ? '    <?php Pjax::end(); ?>' : '' ?>
 
+    </div>
 </div>
 
 <?='<?='?> $this->registerJsFile('@web/js/multipledelete.js', ['depends' => [\yii\web\JqueryAsset::className()]]); ?>
