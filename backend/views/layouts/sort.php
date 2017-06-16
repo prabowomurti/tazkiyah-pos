@@ -9,18 +9,17 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="item-sort">
 
-    <h1><?= Html::encode($this->title) ?></h1>
 <?php if (empty($items)) : ?>
     <p>No item</p>
 <?php else : ?>
     <div>
         <span class="text-left">
-            Drag and drop row to sort
+            <?= Yii::t('app', 'Drag and drop row to sort');?>
         </span>
         <span class="pull-right">
             <div class="btn-group">
-                <button class="btn btn-default" id="sort_label_asc_btn"><span class="glyphicon glyphicon-sort-by-alphabet"></span></button>
-                <button class="btn btn-default" id="sort_label_desc_btn"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></button>
+                <button class="btn btn-default" id="sort_label_asc_btn" title="Sort by label ascending"><span class="glyphicon glyphicon-sort-by-alphabet"></span></button>
+                <button class="btn btn-default" id="sort_label_desc_btn" title="Sort by label descending"><span class="glyphicon glyphicon-sort-by-alphabet-alt"></span></button>
             </div>
         </span>
     </div>

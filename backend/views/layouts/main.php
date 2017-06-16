@@ -63,61 +63,41 @@ $bundle = common\components\assets\Asset::register($this);
                                 "items" => [
                                     ["label" => "Home", "url" => "/", "icon" => "home"],
                                     [
-                                        "label" => "User",
-                                        "icon" => "user-o",
+                                        "label" => "Customer",
+                                        "icon" => "users",
                                         "url" => "#",
                                         "items" => [
-                                            ["label" => "All User", "url" => ["user/index"]],
-                                            ["label" => "Add User", "url" => ["user/create"]],
+                                            ["label" => "All Customer", "url" => ["customer/index"]],
+                                            ["label" => "Add Customer", "url" => ["customer/create"]],
                                         ],
                                     ],
                                     [
-                                        "label" => "Badges",
+                                        "label" => "Product",
+                                        "icon" => "tag",
                                         "url" => "#",
-                                        "icon" => "table",
                                         "items" => [
-                                            [
-                                                "label" => "Default",
-                                                "url" => "#",
-                                                "badge" => "123",
-                                            ],
-                                            [
-                                                "label" => "Success",
-                                                "url" => "#",
-                                                "badge" => "new",
-                                                "badgeOptions" => ["class" => "label-success"],
-                                            ],
-                                            [
-                                                "label" => "Danger",
-                                                "url" => "#",
-                                                "badge" => "!",
-                                                "badgeOptions" => ["class" => "label-danger"],
-                                            ],
+                                            ["label" => "All Product", "url" => ["product/index"]],
+                                            ["label" => "Add Product", "url" => ["product/create"]],
                                         ],
                                     ],
                                     [
-                                        "label" => "Multilevel",
+                                        "label" => "Order",
+                                        "icon" => "shopping-cart",
                                         "url" => "#",
-                                        "icon" => "table",
                                         "items" => [
-                                            [
-                                                "label" => "Second level 1",
-                                                "url" => "#",
-                                            ],
-                                            [
-                                                "label" => "Second level 2",
-                                                "url" => "#",
-                                                "items" => [
-                                                    [
-                                                        "label" => "Third level 1",
-                                                        "url" => "#",
-                                                    ],
-                                                    [
-                                                        "label" => "Third level 2",
-                                                        "url" => "#",
-                                                    ],
-                                                ],
-                                            ],
+                                            ["label" => "All Order", "url" => ["order/index"]],
+                                            ["label" => "Add Order", "url" => ["order/create"]],
+                                        ],
+                                    ],
+                                    [
+                                        "label" => "Data",
+                                        "icon" => "gears",
+                                        "url" => "#",
+                                        "items" => [
+                                            ["label" => "User", "url" => ["user/index"]],
+                                            ["label" => "Outlet", "url" => ["outlet/index"]],
+                                            ["label" => "Employee", "url" => ["employee/index"]],
+                                            ["label" => "Attribute", "url" => ["attribute/index"]],
                                         ],
                                     ],
                                 ],

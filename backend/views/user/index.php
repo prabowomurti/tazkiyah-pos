@@ -1,7 +1,7 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+use common\components\widgets\GridView;
 use yii\widgets\Pjax;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\UserSearch */
@@ -22,7 +22,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\CheckboxColumn'],
+            [
+                'class'   => 'common\components\widgets\ZeedCheckboxColumn',
+            ],
             [
                 'attribute' => 'id',
                 'options'   => ['width' => '70px']
