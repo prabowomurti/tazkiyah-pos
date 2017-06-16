@@ -58,7 +58,7 @@ $bundle = common\components\assets\Asset::register($this);
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                     <div class="menu_section">
                         <?=
-                        \yiister\gentelella\widgets\Menu::widget(
+                        \common\components\widgets\ZeedMenu::widget(
                             [
                                 "items" => [
                                     ["label" => "Home", "url" => "/", "icon" => "home"],
