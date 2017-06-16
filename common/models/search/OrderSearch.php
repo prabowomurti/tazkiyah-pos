@@ -18,9 +18,18 @@ class OrderSearch extends Order
     public function rules()
     {
         return [
-            [['id', 'customer_id', 'outlet_id', 'tax', 'total_price', 'delivery_time', 'created_at', 'updated_at'], 'integer'],
-            [['code', 'status', 'note'], 'safe'],
+            [['id', 'customer_id', 'outlet_id', 'created_at', 'updated_at'], 'integer'],
+            [['code', 'status', 'total_price', 'note', 'delivery_time', 'customer.username'], 'safe'],
         ];
+    }
+
+    /**
+     * Model attributes
+     * @return array array of attributes
+     */
+    public function attributes()
+    {
+        return array_merge(parent::attributes(), ['customer.username']);
     }
 
     /**
@@ -57,17 +66,28 @@ class OrderSearch extends Order
             return $dataProvider;
         }
 
+        // set an alias for the Order table
+        $query->from(['o' => Order::tableName()]);
+
+        // $query->joinWith(['RELATION NAME' => function ($query) {$query->from(['ALIAS' => 'RELATION TABLE NAME']);}]);
+        $query->joinWith(['customer' => function ($query) {$query->from(['customer' => 'customer']);}]);
+
+        // grid filtering conditions
+        $query->andFilterWhere(['like', 'customer.username', $this->getAttribute('customer.username')]);
+
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'o.id' => $this->id,
             'customer_id' => $this->customer_id,
             'outlet_id' => $this->outlet_id,
             'tax' => $this->tax,
-            'total_price' => $this->total_price,
-            'delivery_time' => $this->delivery_time,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'o.created_at' => $this->created_at,
+            'o.updated_at' => $this->updated_at,
         ]);
+
+        $query->andFilterCompare('total_price', $this->total_price);
+
+        $query->andFilterWhere(['like', 'delivery_time', $this->delivery_time]);
 
         $query->andFilterWhere(['like', 'code', $this->code])
             ->andFilterWhere(['like', 'status', $this->status])

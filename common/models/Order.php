@@ -26,6 +26,12 @@ use Yii;
  */
 class Order extends \common\components\coremodels\ZeedActiveRecord
 {
+    const STATUS_ORDERED    = 'ordered';
+    const STATUS_ON_PROCESS = 'on_process';
+    const STATUS_CANCELED   = 'canceled';
+    const STATUS_DONE       = 'done';
+    const STATUS_DELIVERED  = 'delivered';
+
     /**
      * @inheritdoc
      */
@@ -40,10 +46,12 @@ class Order extends \common\components\coremodels\ZeedActiveRecord
     public function rules()
     {
         return [
-            [['customer_id', 'outlet_id', 'tax', 'total_price', 'delivery_time', 'created_at', 'updated_at'], 'integer'],
+            [['customer_id', 'outlet_id', 'tax', 'total_price', 'created_at', 'updated_at'], 'integer'],
+            [['delivery_time'], 'safe'],
             [['code'], 'string', 'max' => 20],
             [['status'], 'string', 'max' => 50],
             [['note'], 'string', 'max' => 255],
+            [['total_price'], 'default', 'value' => 0],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['outlet_id'], 'exist', 'skipOnError' => true, 'targetClass' => Outlet::className(), 'targetAttribute' => ['outlet_id' => 'id']],
         ];
@@ -99,6 +107,21 @@ class Order extends \common\components\coremodels\ZeedActiveRecord
     public function getOrderLogs()
     {
         return $this->hasMany(OrderLog::className(), ['order_id' => 'id']);
+    }
+
+    /**
+     * Get status as list
+     * @return array array of status
+     */
+    public static function getStatusAsList()
+    {
+        return [
+            self::STATUS_ORDERED    => Yii::t('app', 'Ordered'),
+            self::STATUS_ON_PROCESS => Yii::t('app', 'On Process'),
+            self::STATUS_DONE       => Yii::t('app', 'Done'),
+            self::STATUS_DELIVERED  => Yii::t('app', 'Delivered'),
+            self::STATUS_CANCELED   => Yii::t('app', 'Canceled'),
+        ];
     }
 
     /**

@@ -3,10 +3,12 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
+use common\models\Order;
+
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
 
-$this->title = $model->id;
+$this->title = $model->customer->username . ' : #' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Orders'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
@@ -27,13 +29,19 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'attributes' => [
             'id',
-            'customer_id',
-            'outlet_id',
+            'customer.username:text:Customer',
+            'outlet.label:text:Outlet',
             'code',
             'tax',
             'total_price',
-            'status',
-            'delivery_time:datetime',
+            [
+                'attribute' => 'status',
+                'value' => function ($model) {
+                    $status_list = Order::getStatusAsList();
+                    return $model->status ? $status_list[$model->status] : '';
+                }
+            ],
+            'delivery_time',
             'note',
             [
                 'attribute' => 'created_at',

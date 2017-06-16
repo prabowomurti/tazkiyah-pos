@@ -88,4 +88,24 @@ class Customer extends \common\components\coremodels\ZeedActiveRecord
 
         return (empty($index) ? $return : $return[$index]);
     }
+
+    /**
+     * Get all customer as list, used in dropdown
+     * @return array array of customers
+     */
+    public static function getAllAsList()
+    {
+        $customers = self::find()->
+            select(['username', 'id', 'phone'])->
+            orderBy('username')->
+            all();
+
+        $return = [];
+        foreach ($customers as $customer)
+        {
+            $return[$customer['id']] = $customer['username'] . ' (' . $customer['phone'] . ')';
+        }
+
+        return $return;
+    }
 }

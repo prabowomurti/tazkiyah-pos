@@ -3,6 +3,10 @@
 use yii\helpers\Html;
 use common\components\widgets\GridView;
 use yii\widgets\Pjax;
+
+use kartik\date\DatePicker;
+
+use common\models\Order;
 /* @var $this yii\web\View */
 /* @var $searchModel common\models\search\OrderSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -28,21 +32,38 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class'   => 'common\components\widgets\ZeedCheckboxColumn',
             ],
-
+            'customer.username:text:Customer',
             [
-                'attribute' => 'id',
-                'options' => ['width' => '70px'],
+                'attribute' => 'outlet_id',
+                'filter' => \common\models\Outlet::getAllAslist(),
+                'label' => 'Outlet',
+                'value' => function ($model) {return $model->outlet->label;}
             ],
-            'customer_id',
-            'outlet_id',
-            'code',
-            'tax',
-            // 'total_price',
-            // 'status',
-            // 'delivery_time:datetime',
-            // 'note',
-            // 'created_at',
-            // 'updated_at',
+            'total_price',
+            [
+                'attribute' => 'status',
+                'filter' => Order::getStatusAsList()
+            ],
+            [
+                'attribute' => 'delivery_time',
+                'filter' => DatePicker::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'delivery_time',
+                    'pickerButton' => false,
+                    'type' => DatePicker::TYPE_COMPONENT_APPEND,
+                    'pluginOptions' => [
+                        'autoclose'=>true,
+                        'format' => 'yyyy-mm-dd',
+                    ],
+                ]),
+                'format' => 'raw',
+                // 'filterInputOptions' => ['style' => 'padding-bottom: 0px']
+            ],
+            [
+                'attribute' => 'created_at',
+                'value' => function ($model) { return date('Y-m-d H:i:s', $model->created_at);},
+                'filter' => ''
+            ],
 
             ['class' => 'yii\grid\ActionColumn'],
         ],
