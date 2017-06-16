@@ -4,10 +4,11 @@ namespace backend\controllers;
 
 use Yii;
 use common\models\User;
-
+use common\models\Product;
 use common\models\Order;
-// use common\models\search\OrderSearch as OrderSearch;
-use common\models\search\OrderSearch;
+
+use common\models\OrderItem;
+// use common\models\search\OrderItemSearch as OrderItemSearch;
 use common\models\search\OrderItemSearch;
 use common\components\corecontrollers\ZeedController;
 use yii\web\NotFoundHttpException;
@@ -15,9 +16,9 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
 /**
- * OrderController implements the CRUD actions for Order model.
+ * OrderItemController implements the CRUD actions for OrderItem model.
  */
-class OrderController extends ZeedController
+class OrderItemController extends ZeedController
 {
     /**
      * @inheritdoc
@@ -34,7 +35,8 @@ class OrderController extends ZeedController
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action)
                         {
-                            return Yii::$app->user->identity['role'] == User::ROLE_SUPERADMIN ||
+                            return 
+                                Yii::$app->user->identity['role'] == User::ROLE_SUPERADMIN || 
                                 Yii::$app->user->identity['role'] == User::ROLE_ADMIN;
                         }
                     ],
@@ -50,12 +52,12 @@ class OrderController extends ZeedController
     }
 
     /**
-     * Lists all Order models.
+     * Lists all OrderItem models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new OrderSearch();
+        $searchModel = new OrderItemSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -65,7 +67,7 @@ class OrderController extends ZeedController
     }
 
     /**
-     * Displays a single Order model.
+     * Displays a single OrderItem model.
      * @param integer $id
      * @return mixed
      */
@@ -77,16 +79,37 @@ class OrderController extends ZeedController
     }
 
     /**
-     * Creates a new Order model.
+     * Creates a new OrderItem model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new Order();
+        $model = new OrderItem();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if (Yii::$app->request->post()) 
+        {
+            $post = Yii::$app->request->post('OrderItem');
+
+            $model->order_id             = $post['order_id'];
+            $model->product_id           = $post['product_id'];
+            $model->product_attribute_id = ((int) $post['product_attribute_id'] ? (int) $post['product_attribute_id'] : null);
+            $model->quantity             = (int) $post['quantity'];
+            $model->note                 = $post['note'];
+            $product                     = Product::findOne($model->product_id);
+            $model->product_label        = $product->label;
+            $model->unit_price           = $product->price + ($model->productAttribute ? $model->productAttribute->price : 0);
+
+            if ($model->save())
+            {
+                if ( ! Yii::$app->request->isAjax)
+                    return $this->redirect(['view', 'id' => $model->id]);
+                else 
+                    return $model->order->total_price;
+            }
+            else 
+                return $model->errors[0];
+
         } else {
             return $this->render('create', [
                 'model' => $model,
@@ -95,7 +118,7 @@ class OrderController extends ZeedController
     }
 
     /**
-     * Updates an existing Order model.
+     * Updates an existing OrderItem model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -104,33 +127,44 @@ class OrderController extends ZeedController
     {
         $model = $this->findModel($id);
 
-        // preparing orderItemProvider
-        $order_items = new OrderItemSearch();
-        $order_items->order_id = $model->id;
-        $orderItemsProvider = $order_items->search('');
-        $orderItemsProvider->sort = false; // disable sorting
+        if (Yii::$app->request->isAjax)
+        {
+            $post = Yii::$app->request->post('OrderItem');
+            $model->quantity = (int) $post['quantity'];
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-                'orderItemsProvider' => $orderItemsProvider,
-            ]);
+            if ($model->save())
+                return $model->order->total_price;
+            else 
+                return $model->errors[0];
+        }
+        else 
+        {
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            } else {
+                return $this->render('update', [
+                    'model' => $model,
+                ]);
+            }
         }
     }
 
     /**
-     * Deletes an existing Order model.
+     * Deletes an existing OrderItem model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $order_id = $model->order_id;
+        $model->delete();
 
-        return $this->redirect(['index']);
+        if ( ! Yii::$app->request->isAjax)
+            return $this->redirect(['index']);
+        else 
+            return Order::findOne($order_id)->total_price;
     }
 
     /**
@@ -148,15 +182,15 @@ class OrderController extends ZeedController
     }
 
     /**
-     * Finds the Order model based on its primary key value.
+     * Finds the OrderItem model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return Order the loaded model
+     * @return OrderItem the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Order::findOne($id)) !== null) {
+        if (($model = OrderItem::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');

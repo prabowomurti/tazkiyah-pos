@@ -28,7 +28,7 @@ class ProductAttributeController extends ZeedController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index', 'view', 'edit', 'create', 'update', 'delete', 'multipledelete', 'generator'],
+                        'actions' => ['index', 'view', 'edit', 'list', 'create', 'update', 'delete', 'multipledelete', 'generator'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action)
@@ -144,6 +144,30 @@ class ProductAttributeController extends ZeedController
         return $this->render('update', [
             'model' => $model,
         ]);
+    }
+
+    /**
+     * List all product's attributes
+     * @param  integer $id product ID
+     * @return mixed     
+     */
+    public function actionList($id)
+    {
+        $product_attributes = ProductAttribute::find()->
+            where(['product_id' => $id])->
+            orderBy('id DESC')->
+            all();
+
+        if (count($product_attributes) <= 0)
+            return '<option>&mdash; No Attribute &mdash;</option>';
+
+        $return = '';
+        foreach ($product_attributes as $product_attribute)
+        {
+            $return .= '<option value="' . $product_attribute->id . '">' . $product_attribute->attributeCombinationLabel . '</option>';
+        }
+
+        return $return;
     }
 
     /**

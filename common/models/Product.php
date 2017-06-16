@@ -85,4 +85,21 @@ class Product extends \common\components\coremodels\ZeedActiveRecord
     {
         return new \common\models\activequery\ProductQuery(get_called_class());
     }
+
+    /**
+     * Get all product as list / used in dropdownlist
+     * @return [type] [description]
+     */
+    public static function getAllAsList()
+    {
+        $products = self::find()->
+            select(['label', 'id'])->
+            where(['visible' => 1])->
+            orderBy('position')->
+            indexBy('id')->
+            column();
+
+        return $products;
+
+    }
 }
