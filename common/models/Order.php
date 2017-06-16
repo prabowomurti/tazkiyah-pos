@@ -132,4 +132,91 @@ class Order extends \common\components\coremodels\ZeedActiveRecord
     {
         return new \common\models\activequery\OrderQuery(get_called_class());
     }
+
+    /**
+     * Generate code to check order status by customer
+     * @return [type] [description]
+     */
+    public static function generateCode()
+    {
+        //http://mikeboers.com/blog/2013/06/28/the-ux-of-coupon-codes
+        $characters = '34679ACDEFGHJKMNPRTWXY'; // minus 0, O, Q, 8, B, 1, I, L, U, V, 2, Z, 5, S
+
+        $code = '';
+        for ($i = 0; $i < 5; $i++) {
+            $code .= $characters[rand(0, 21)];
+        }
+
+        while (self::findOne(['code' => $code]))
+        {
+            $code = self::generateCode();
+        }
+
+        return $code;
+    }
+
+    /**
+     * - Save status change in order_log table
+     * @param  [type] $insert            [description]
+     * @param  [type] $changedAttributes [description]
+     * @return [type]                    [description]
+     */
+    public function afterSave($insert, $changedAttributes)
+    {
+        parent::afterSave($insert, $changedAttributes);
+
+        // generate code
+        if ($insert)
+        {
+            $this->code = self::generateCode();
+            $this->save();
+        }
+
+        $old_status = isset($changedAttributes['status']) ? $changedAttributes['status'] : $this->status;
+
+        // do nothing when the status is not changed
+        if ( ! $insert && $old_status == $this->status)
+            return ;
+
+        $status_log           = new OrderLog;
+
+        $status_log->user_id  = Yii::$app->user->id;
+        $status_log->order_id = $this->id;
+        $status_log->status   = $this->status;
+
+        $user = User::findOne(Yii::$app->user->id);
+
+        if ($insert)
+            $status_log->note = 'User ' . $user->username . ' #' . $user->id . ' makes order #' . $this->id;
+        else // order's status update
+            $status_log->note = 'User ' . $user->username . ' #' . $user->id . ' updates order #' . $this->id;
+
+        $status_log->save();
+    }
+
+    /**
+     * - Save log when the order is deleted
+     * @return [type] [description]
+     */
+    public function beforeDelete()
+    {
+        if (parent::beforeDelete())
+        {
+            $status_log           = new OrderLog;
+
+            $status_log->user_id  = Yii::$app->user->id;
+            $status_log->order_id = $this->id;
+            $status_log->status   = $this->status;
+
+            $user = User::findOne(Yii::$app->user->id);
+
+            $status_log->note = 'User ' . $user->username . ' #' . $user->id . ' just deleted order #' . $this->id;
+            $status_log->save();
+
+            return TRUE;
+        }
+        else
+            return FALSE;
+    }
+
 }
