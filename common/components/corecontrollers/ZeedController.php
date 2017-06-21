@@ -63,7 +63,7 @@ class ZeedController extends Controller
         $items = [];
         foreach ($rows as $key => $item)
         {
-            $items[$key]['content'] = '<td style="width: 64px">' . $item['id'] . $end_tag . $open_tag . $item['label'] . $end_tag;
+            $items[$key]['content'] = '<td style="width:28px"><span class="fa fa-arrows"></span></td><td style="width: 64px">' . $item['id'] . $end_tag . $open_tag . $item['label'] . $end_tag;
             $items[$key]['id']      = $item['id'];
         }
 

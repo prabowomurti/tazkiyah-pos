@@ -57,8 +57,8 @@ $(document).ready(function () {
             var listitems = $('tr', element);
 
             listitems.sort(function(a, b) {
-                var tA = $(a).children('td:nth-child(2)').text().toUpperCase(); // get the label
-                var tB = $(b).children('td:nth-child(2)').text().toUpperCase(); // get next label
+                var tA = $(a).children('td:nth-child(3)').text().toUpperCase(); // get the label
+                var tB = $(b).children('td:nth-child(3)').text().toUpperCase(); // get next label
                 
                 if (asc)
                     return tA.localeCompare(tB);
