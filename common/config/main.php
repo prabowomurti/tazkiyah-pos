@@ -2,7 +2,7 @@
 return [
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     // 'language' => 'id', // still using Bahasa Indonesia
-    'name' => 'My Application',
+    'name' => 'Tazkiyah Laundry',
     'components' => [
         'cache' => [
             'class' => 'yii\caching\FileCache',

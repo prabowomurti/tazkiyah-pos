@@ -34,7 +34,7 @@ $this->title = 'Login';
         <br />
 
         <div>
-            <h1><i class="fa fa-leaf"></i> <?= Yii::$app->name;?></h1>
+            <h1><i class="fa fa-leaf"></i> <?= \common\models\Setting::t('app_name');?></h1>
             <p>&copy;2017 All Rights Reserved.</p>
         </div>
     </div>

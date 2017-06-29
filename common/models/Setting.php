@@ -21,6 +21,11 @@ class Setting extends \common\components\coremodels\ZeedActiveRecord
         return 'setting';
     }
 
+    public function behaviors()
+    {
+        return [];
+    }
+
     /**
      * @inheritdoc
      */
@@ -43,6 +48,20 @@ class Setting extends \common\components\coremodels\ZeedActiveRecord
             'key' => Yii::t('app', 'Key'),
             'value' => Yii::t('app', 'Value'),
         ];
+    }
+
+    /**
+     * Return value of 'value' field based on key
+     * @param  string $key key
+     * @return string      $value
+     */
+    public static function t($key = '')
+    {
+        $row = self::find()->where(['key' => $key]);
+        if (empty($row))
+            return '';
+
+        return $row->select('value')->scalar();
     }
 
     /**
