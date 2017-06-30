@@ -27,9 +27,11 @@ use common\models\Customer;
 
     <?= $form->field($model, 'code')->textInput(['maxlength' => true, 'disabled' => 'disabled']) ?>
 
-    <?= $form->field($model, 'tax')->textInput(['type' => 'number']) ?>
+    <?= $form->field($model, 'tax')->textInput(['type' => 'number', 'step' => 0.01]) ?>
 
-    <?= $form->field($model, 'total_price')->textInput(['type' => 'number', 'id' => 'total_price']) ?>
+    <?= $form->field($model, 'discount')->textInput(['type' => 'number', 'step' => 0.01]) ?>
+
+    <?= $form->field($model, 'total_price')->textInput(['type' => 'number', 'step' => 0.01, 'id' => 'total_price']) ?>
 
     <?= $form->field($model, 'status')->dropdownList(Order::getStatusAsList(), ['prompt' => Yii::t('app', 'Select Status')]) ?>
 
@@ -79,10 +81,11 @@ use common\models\Customer;
                     ],
                     'quantity',
                     'unit_price',
+                    'discount',
                     [
                         'label' => 'Sub Total',
                         'value' => function ($model) {
-                            return $model->quantity * $model->unit_price;
+                            return $model->quantity * $model->unit_price - $model->discount;
                         }
                     ],
                     'note',
@@ -184,7 +187,13 @@ use common\models\Customer;
                     <div class="form-group">
                         <label class="control-label col-md-4" for="quantity">Quantity</label>
                         <div class="col-md-6">
-                            <?= Html::textInput('OrderItem[quantity]', 1, ['id' => 'product_quantity', 'class' => 'form-control', 'type' => 'number', 'min' => 1]);?>
+                            <?= Html::textInput('OrderItem[quantity]', 1, ['id' => 'product_quantity', 'class' => 'form-control', 'type' => 'number', 'step' => 0.01, 'min' => 1]);?>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="discount">Discount</label>
+                        <div class="col-md-6">
+                            <?= Html::textInput('OrderItem[discount]', 0, ['id' => 'discount', 'class' => 'form-control', 'type' => 'number', 'step' => 0.01]);?>
                         </div>
                     </div>
                     <div class="form-group">
@@ -217,7 +226,7 @@ use common\models\Customer;
                 <div class="form-group">
                     <label class="control-label col-md-4" for="order_item_quantity">Quantity</label>
                     <div class="col-md-6">
-                        <?= Html::textInput('OrderItem[quantity]', 0, ['id' => 'edit_order_item_form_quantity', 'class' => 'form-control', 'type' => 'number', 'min' => 1]);?>
+                        <?= Html::textInput('OrderItem[quantity]', 0, ['id' => 'edit_order_item_form_quantity', 'class' => 'form-control', 'type' => 'number', 'step' => 0.01, 'min' => 0.01]);?>
                     </div>
                 </div>
             </div>

@@ -39,7 +39,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Outlet',
                 'value' => function ($model) {return $model->outlet->label;}
             ],
-            'total_price',
+            // 'total_price',
             [
                 'attribute' => 'status',
                 'filter' => Order::getStatusAsList()

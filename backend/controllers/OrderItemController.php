@@ -94,7 +94,8 @@ class OrderItemController extends ZeedController
             $model->order_id             = $post['order_id'];
             $model->product_id           = $post['product_id'];
             $model->product_attribute_id = ((int) $post['product_attribute_id'] ? (int) $post['product_attribute_id'] : null);
-            $model->quantity             = (int) $post['quantity'];
+            $model->quantity             = (double) $post['quantity'];
+            $model->discount             = (double) $post['discount'];
             $model->note                 = $post['note'];
             $product                     = Product::findOne($model->product_id);
             $model->product_label        = $product->label;
@@ -130,12 +131,12 @@ class OrderItemController extends ZeedController
         if (Yii::$app->request->isAjax)
         {
             $post = Yii::$app->request->post('OrderItem');
-            $model->quantity = (int) $post['quantity'];
+            $model->quantity = (double) $post['quantity'];
 
             if ($model->save())
                 return $model->order->total_price;
             else 
-                return $model->errors[0];
+                return array_values($model->errors)[0][0];
         }
         else 
         {

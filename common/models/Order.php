@@ -12,6 +12,7 @@ use Yii;
  * @property integer $outlet_id
  * @property string $code
  * @property integer $tax
+ * @property double $discount
  * @property integer $total_price
  * @property string $status
  * @property integer $delivery_time
@@ -46,12 +47,14 @@ class Order extends \common\components\coremodels\ZeedActiveRecord
     public function rules()
     {
         return [
-            [['customer_id', 'outlet_id', 'tax', 'total_price', 'created_at', 'updated_at'], 'integer'],
+            [['customer_id', 'outlet_id', 'created_at', 'updated_at'], 'integer'],
             [['delivery_time'], 'safe'],
             [['code'], 'string', 'max' => 20],
             [['status'], 'string', 'max' => 50],
             [['note'], 'string', 'max' => 255],
-            [['total_price'], 'default', 'value' => 0],
+            [['total_price', 'tax', 'discount'], 'number'],
+            [['total_price', 'tax', 'discount'], 'default', 'value' => 0.00],
+            [['total_price', 'tax', 'discount'], 'filter', 'filter' => 'doubleval'],
             [['customer_id'], 'exist', 'skipOnError' => true, 'targetClass' => Customer::className(), 'targetAttribute' => ['customer_id' => 'id']],
             [['outlet_id'], 'exist', 'skipOnError' => true, 'targetClass' => Outlet::className(), 'targetAttribute' => ['outlet_id' => 'id']],
         ];
@@ -63,17 +66,18 @@ class Order extends \common\components\coremodels\ZeedActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => Yii::t('app', 'ID'),
-            'customer_id' => Yii::t('app', 'Customer ID'),
-            'outlet_id' => Yii::t('app', 'Outlet ID'),
-            'code' => Yii::t('app', 'Code'),
-            'tax' => Yii::t('app', 'Tax'),
-            'total_price' => Yii::t('app', 'Total Price'),
-            'status' => Yii::t('app', 'Status'),
+            'id'            => Yii::t('app', 'ID'),
+            'customer_id'   => Yii::t('app', 'Customer ID'),
+            'outlet_id'     => Yii::t('app', 'Outlet ID'),
+            'code'          => Yii::t('app', 'Code'),
+            'tax'           => Yii::t('app', 'Tax'),
+            'discount'      => Yii::t('app', 'Discount'),
+            'total_price'   => Yii::t('app', 'Total Price'),
+            'status'        => Yii::t('app', 'Status'),
             'delivery_time' => Yii::t('app', 'Delivery Time'),
-            'note' => Yii::t('app', 'Note'),
-            'created_at' => Yii::t('app', 'Created At'),
-            'updated_at' => Yii::t('app', 'Updated At'),
+            'note'          => Yii::t('app', 'Note'),
+            'created_at'    => Yii::t('app', 'Created At'),
+            'updated_at'    => Yii::t('app', 'Updated At'),
         ];
     }
 

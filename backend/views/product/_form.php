@@ -21,7 +21,7 @@ use yii\widgets\Pjax;
 
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'price')->textInput(['type' => 'number']) ?>
+    <?= $form->field($model, 'price')->textInput(['type' => 'number', 'step' => 0.01]) ?>
 
     <?= $form->field($model, 'visible')->dropdownList(Product::getVisibleAsList(), ['prompt' => 'Select visibility']) ?>
 
@@ -144,7 +144,7 @@ use yii\widgets\Pjax;
                     <div class="form-group">
                         <label class="control-label col-md-4" for="product_attribute_price">Impact on Price</label>
                         <div class="col-md-6">
-                            <?= Html::textInput('ProductAttribute[price]', 0, ['class' => 'form-control', 'type' => 'number']);?>
+                            <?= Html::textInput('ProductAttribute[price]', 0, ['class' => 'form-control', 'type' => 'number', 'step' => 0.01]);?>
                         </div>
                     </div>
                 </div>
@@ -172,7 +172,7 @@ use yii\widgets\Pjax;
                 <div class="form-group">
                     <label class="control-label col-md-4" for="product_attribute_price">Impact on Price</label>
                     <div class="col-md-6">
-                        <?= Html::textInput('ProductAttribute[price]', 0, ['id' => 'edit_product_attribute_form_price', 'class' => 'form-control', 'type' => 'number']);?>
+                        <?= Html::textInput('ProductAttribute[price]', 0, ['id' => 'edit_product_attribute_form_price', 'class' => 'form-control', 'type' => 'number', 'step' => 0.01]);?>
                     </div>
                 </div>
             </div>

@@ -25,9 +25,9 @@ $(document).ready(function () {
         {
             var label = $('#product_attribute_dropdown > option[value=' + attributes[i] + ']').text();
             
-            $("<div class='form-group attribute'><label class='control-label'>" + label + " <\/label><input type='number' name='attributes[" +
+            $("<div class='form-group attribute'><label class='control-label'>" + label + " <\/label><input type='number' step='0.01' name='attributes[" +
                 attributes[i] +
-                "]' value='0' class='form-control' placeholder='Impact on Price'\/><\/div>").insertBefore('.generate_button');
+                "]' value='0.00' class='form-control' placeholder='Impact on Price'\/><\/div>").insertBefore('.generate_button');
 
         }
     });

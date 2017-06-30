@@ -34,7 +34,8 @@ class ProductAttribute extends \common\components\coremodels\ZeedActiveRecord
     public function rules()
     {
         return [
-            [['product_id', 'price', 'created_at', 'updated_at'], 'integer'],
+            [['product_id', 'created_at', 'updated_at'], 'integer'],
+            [['price'], 'number'],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
         ];
     }

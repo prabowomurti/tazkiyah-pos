@@ -14,7 +14,7 @@ $(document).ready(function () {
 
         }).done(function (data){
             $.pjax.reload({container: '#' + pjaxContainer});
-            $('#total_price').val(parseInt(data));
+            $('#total_price').val(data);
         });
 
     });
@@ -32,9 +32,9 @@ $(document).ready(function () {
             return false;
         }
 
-        if ( $('#product_quantity').val() < 1)
+        if ( $('#product_quantity').val() < 0)
         {
-            alert('Minimum quantity is 1');
+            alert('Minimum quantity is 0');
             return false;
         }
 
@@ -65,7 +65,7 @@ $(document).ready(function () {
 
         // set the value based on clicked row
         $('#edit_order_item_form_id').val(order_item_id);
-        $('#edit_order_item_form_quantity').val(parseInt(order_item_quantity));
+        $('#edit_order_item_form_quantity').val(order_item_quantity);
     });
 
     // edit order items

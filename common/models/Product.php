@@ -36,10 +36,10 @@ class Product extends \common\components\coremodels\ZeedActiveRecord
     {
         return [
             [['label'], 'required'],
-            [['price', 'visible', 'position', 'created_at', 'updated_at'], 'integer'],
+            [['visible', 'position', 'created_at', 'updated_at'], 'integer'],
             [['position'], 'default', 'value' => 0],
-            [['price'], 'integer', 'min' => '0'],
-            [['price'], 'filter', 'filter' => 'intval'],
+            [['price'], 'number', 'min' => '0.00'],
+            [['price'], 'filter', 'filter' => 'doubleval'],
             [['label', 'description'], 'string', 'max' => 255],
         ];
     }

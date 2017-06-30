@@ -12,8 +12,9 @@ use Yii;
  * @property integer $product_id
  * @property string $product_label
  * @property integer $product_attribute_id
- * @property integer $quantity
- * @property integer $unit_price
+ * @property double $quantity
+ * @property double $discount
+ * @property double $unit_price
  * @property string $note
  * @property integer $created_at
  * @property integer $updated_at
@@ -38,8 +39,9 @@ class OrderItem extends \common\components\coremodels\ZeedActiveRecord
     public function rules()
     {
         return [
-            [['order_id', 'product_id', 'product_attribute_id', 'quantity', 'unit_price', 'created_at', 'updated_at'], 'integer'],
+            [['order_id', 'product_id', 'product_attribute_id', 'created_at', 'updated_at'], 'integer'],
             [['product_label', 'note'], 'string', 'max' => 255],
+            [['quantity', 'unit_price', 'discount'], 'number'],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['product_attribute_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProductAttribute::className(), 'targetAttribute' => ['product_attribute_id' => 'id']],
             [['product_id'], 'exist', 'skipOnError' => true, 'targetClass' => Product::className(), 'targetAttribute' => ['product_id' => 'id']],
@@ -58,6 +60,7 @@ class OrderItem extends \common\components\coremodels\ZeedActiveRecord
             'product_label'        => Yii::t('app', 'Product Label'),
             'product_attribute_id' => Yii::t('app', 'Product Attribute ID'),
             'quantity'             => Yii::t('app', 'Quantity'),
+            'discount'             => Yii::t('app', 'Discount'),
             'unit_price'           => Yii::t('app', 'Unit Price'),
             'note'                 => Yii::t('app', 'Note'),
             'created_at'           => Yii::t('app', 'Created At'),
@@ -111,18 +114,18 @@ class OrderItem extends \common\components\coremodels\ZeedActiveRecord
         // recalculate total_price field in order table
         $order_id = $this->order_id;
         $products = self::find()->
-            select(['unit_price', 'quantity'])->
+            select(['unit_price', 'quantity', 'discount'])->
             where(['order_id' => $order_id])->
             all();
 
         $total_price = 0;
         foreach ($products as $product) 
         {
-            $total_price += $product->unit_price * $product->quantity;
+            $total_price += $product->unit_price * $product->quantity - $product->discount;
         }
 
         $order = Order::findOne($order_id);
-        $order->total_price = $total_price;
+        $order->total_price = $total_price + $order->tax - $order->discount;
         $order->save();
     }
 
@@ -135,7 +138,7 @@ class OrderItem extends \common\components\coremodels\ZeedActiveRecord
         if (parent::beforeDelete())
         {
             $order = Order::findOne($this->order_id);
-            $order->total_price -= $this->unit_price * $this->quantity;
+            $order->total_price -= $this->unit_price * $this->quantity - $this->discount;
             $order->save();
 
             return TRUE;

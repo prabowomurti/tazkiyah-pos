@@ -33,6 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'outlet.label:text:Outlet',
             'code',
             'tax',
+            'discount',
             'total_price',
             [
                 'attribute' => 'status',
