@@ -1,0 +1,225 @@
+.main_container {
+    height: 100vh;
+}
+.left-menu {
+    margin: 0px;
+    padding: 0px;
+    height: 100vh;
+}
+.operator-menu:nth-child(1) {
+    margin-top: 0px;
+}
+.operator-menu {
+    height: 80px;
+    border-bottom: 1px solid #BBB;
+    border-right: 1px solid #BBB;
+    background-color: #DDD;
+    text-align: center;
+    cursor: pointer;
+}
+.operator-menu.active {
+    background-color: #fff;
+}
+.operator-menu > a {
+    display: block;
+}
+.operator-menu > a > span {
+    padding-top: 12px;
+}
+.operator-menu.active a span.fa {
+    margin-right: 0px;
+}
+.operator-menu.active.col-md-12, 
+.operator-menu.active.col-lg-12 {
+    border-right: 1px solid white;
+}
+.operator-menu.active.col-sm-4, 
+.operator-menu.active.col-xs-4 {
+    border-bottom: 2px solid white;
+}
+.left-menu .operator-status {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    background-color: #EEE;
+    line-height: 3.2em;
+}
+
+.right-content {
+    padding: 12px 0px 10px 0px;
+    background-color: white;
+    height: 100%;
+}
+
+/* -=-=-=-=-=-= CART -=-=-=-=-=-=*/
+/*.cart {
+    overflow-y: scroll;
+    max-height: 400px;   
+}*/
+.cart th {
+    text-align: center;
+    min-width: 0;
+    padding: 0;
+}
+.cart tr {
+    vertical-align: middle;
+}
+.cart-item .cell-description{
+    cursor: pointer;
+}
+.cart th.cart-th-quantity{
+    text-align: center;
+}
+.cart th.cart-th-subtotal, 
+.cart th.cart-th-unit-price,
+.cart th.cart-th-discount
+{
+    width: 100px;
+    text-align: right;
+}
+.cart th.cart-th-description,
+.cart tbody tr td.cell-description {
+    text-align: left;
+}
+.cart tbody tr td.cell-description {
+    color: #2A3F54;
+}
+.cart tbody tr td.cell-description small{
+    font-size: 70%;
+    color: #73879C;
+}
+.cart tbody tr td {
+    text-align: right;
+    font-size: 16px;
+}
+.cart tbody tr td.cell-quantity {
+    width: 126px;
+    text-align: center;
+}
+.cart tbody tr td.cell-unit-price {
+    width: 100px;
+}
+.cell-quantity-input,
+.cell-discount-input {
+    margin-bottom: -3px;
+    margin-top: -3px;
+}
+.cell-quantity-input input,
+.cell-discount-input {
+    text-align: right;
+}
+.cell-discount-input {
+    width: 90%;
+    float: right;
+    padding-bottom: 2px;
+    padding-top: 0px;
+    padding-right: 4px;
+    font-size: 16px;
+    color: #73879C;
+    border: none;
+    font-weight: 400;
+}
+.cell-quantity .input-group-addon .fa {
+    color: #808080;
+}
+
+.add_product {
+    text-align: center !important;
+    cursor: pointer;
+}
+
+/* -=-=-=-=-=-= SUMMARY -=-=-=-=-=-=*/
+.summary .customer {
+    color: #2A3F54;
+    background-color: #F9F9F9;
+    padding: 16px;
+    font-size: 16px;
+}
+.summary .customer span {
+    margin-top: -3px;
+}
+
+.summary .subtotal, 
+.summary .discount {
+    border-bottom: 1px dashed #F0F0F0;
+}
+
+.summary .subtotal, 
+.summary .discount,
+.summary .tax {
+    color: #FAFAFA;
+    background-color: #73879C;
+    font-size: 24px;
+    font-weight: 300;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.summary .discount span{
+    color: #ffd3d3;
+}
+.total {
+    font-size: 42px;
+    font-weight: 400;
+    text-align: right;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: #2A3F54;
+}
+
+.cash-buttons {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+.cash-buttons .cash,
+.cash-buttons .credit {
+    margin: 0px;
+    border-radius: 3px;
+    border: 1px solid white;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: #F0F0F0;
+    background-color: #2A3F54;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 4px;
+}
+.cash-buttons .btn:hover {
+    background-color: #73879C;
+}
+
+
+/* -=-=-=-=-=-= PRODUCTS -=-=-=-=-=-=*/
+.products {
+    position: absolute;
+    bottom: 42px;
+    left: 0;
+}
+.products .col-xs-12:nth-child(1) .product {
+    border-top: 1px dotted #DDD;
+}
+
+.product:nth-child(1){
+    border-left: 1px dotted #DDD;
+}
+.product {
+    height: 76px;
+    padding: 10px;
+    border-bottom: 1px dotted #DDD;
+    border-right: 1px dotted #DDD;
+    cursor: pointer;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product:hover {
+    background-color: #F8F8F8;
+}
+
+.search-products {
+    position: absolute;
+    bottom: 2px;
+}
