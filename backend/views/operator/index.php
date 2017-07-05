@@ -153,6 +153,7 @@ $this->title = \common\models\Setting::t('app_name') . ' - Operator';
                     </div>
                 </div>
                 <div class="modal-footer">
+                    <span class="btn btn-danger pull-left remove_from_cart_btn" >Remove</span>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <input type="submit" class="btn btn-primary" value="Save"/>
                 </div>

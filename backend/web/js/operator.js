@@ -24,6 +24,15 @@ $(document).ready(function () {
         calculateSubTotal($(this).parent().parent());
     });
 
+    // --------- REMOVE ITEM FROM CART -----------
+    $('.remove_from_cart_btn').on('click', function () {
+        var item_index = $('#form_edit_item_options .cart_item_index').val();
+        var cart_item = $('.cart tbody').find('.cart-item').eq(item_index);
+
+        $('#edit_item_options_modal').modal('hide');
+
+        deleteItemFromCart(cart_item);
+    });
 
     // --------- ADD SELECTED PRODUCT TO CART -----------
     $('.product').on('click', function () {
@@ -155,10 +164,16 @@ $(document).ready(function () {
             input_quantity.val(parseInt(oldVal) - 1);
         else if (oldVal > 1)
             input_quantity.val(1);
-        else 
-            input_quantity.closest('tr').remove();
+        else {
+            deleteItemFromCart(input_quantity.closest('tr'));
+        }
 
         calculateSubTotal(input_quantity.parent().parent().parent());
+    }
+
+    function deleteItemFromCart(cart_item)
+    {
+        cart_item.fadeOut('fast', function () {$(this).remove();});
     }
 
     // calculate subtotal for each product
