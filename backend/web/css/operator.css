@@ -119,6 +119,15 @@
     border: none;
     font-weight: 400;
 }
+/* hide spinner button for input type=number */
+.cell-discount-input::-webkit-inner-spin-button,
+.cell-discount-input::-webkit-outer-spin-button,
+.product-quantity::-webkit-inner-spin-button,
+.product-quantity::-webkit-outer-spin-button
+ {
+        -webkit-appearance: none;
+    margin: 0;
+}
 .cell-quantity .input-group-addon .fa {
     color: #808080;
 }

@@ -108,12 +108,12 @@ $this->title = \common\models\Setting::t('app_name') . ' - Operator';
             <td class="cell-quantity">
                 <div class="input-group input-group-sm cell-quantity-input">
                     <label class="btn input-group-addon decrease-quantity"><span class="fa fa-minus"></span></label>
-                    <input type="text" class="product-quantity form-control" min="1" value="1" />
+                    <input type="number" class="product-quantity form-control" min="1" value="1" step=0.01/>
                     <span class="btn input-group-addon increase-quantity"><span class="fa fa-plus"></span></span>
                 </div>
             </td>
             <td class="cell-unit-price"></td>
-            <td class="cell-discount"><input type="text" class="cell-discount-input form-control input-sm" value="0" /></td>
+            <td class="cell-discount"><input type="number" class="cell-discount-input form-control input-sm" value="0" min="1" step=0.01/></td>
             <td class="cell-subtotal"></td>
         </tr>
     </table>

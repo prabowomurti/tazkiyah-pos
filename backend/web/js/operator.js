@@ -39,6 +39,15 @@ $(document).ready(function () {
         addProductToCart($(this));
     });
 
+    // --------- BEAUTIFY DISCOUNT VALUE -----------
+    $('.cell-discount-input').on('change', function () {
+        var value = $(this).val();
+
+        value = parseFloat(value);
+        $(this).val(value);
+
+    });
+
     // ------------  EDIT PRODUCT ON CART --------------
     $('.cart').on('click', '.cart-item .cell-description', function () {
 
@@ -152,7 +161,7 @@ $(document).ready(function () {
     function increaseQuantity(input_quantity)
     {
         var oldVal = input_quantity.val();
-        input_quantity.val(parseInt(oldVal) + 1);
+        input_quantity.val(parseInt(oldVal, 10) + 1);
 
         calculateSubTotal(input_quantity.parent().parent().parent());
     }
@@ -161,7 +170,7 @@ $(document).ready(function () {
     {
         var oldVal = input_quantity.val();
         if (oldVal >= 2)
-            input_quantity.val(parseInt(oldVal) - 1);
+            input_quantity.val(parseInt(oldVal, 10) - 1);
         else if (oldVal > 1)
             input_quantity.val(1);
         else {
@@ -189,8 +198,6 @@ $(document).ready(function () {
 
         var discount = +Math.abs(cart_item.find('.cell-discount-input').val()) || 0;
         var quantity = Math.abs(cart_item.find('.cell-quantity input').val()) || 0;
-
-        console.log(discount);
 
         var subtotal = unit_price * quantity - discount;
         cart_item.find('.cell-subtotal').text(formatCurrency(subtotal));
