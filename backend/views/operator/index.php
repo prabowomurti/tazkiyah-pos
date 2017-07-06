@@ -200,3 +200,42 @@ $this->title = \common\models\Setting::t('app_name') . ' - Operator';
         </div>
     </div>
 </div>
+
+<!-- MODAL of .TAX EDIT -->
+<div class="modal" id="edit_tax_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span></span>Edit Tax</h4>
+            </div>
+            <form class="form form-horizontal" id="form_edit_tax">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="edit_tax_type">Type</label>
+                        <div class="col-md-6">
+                            <div class="btn-group tax_type_btn_group">
+                                <button type="button" class="btn btn-default active tax_by_value">By Value</button>
+                                <button type="button" class="btn btn-default tax_by_percentage">By Percentage</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="edit_tax_input">Tax</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input id="edit_tax_input" type="number" step=0.01 min=0 class="form-control" value="0"/>
+                                <span class="input-group-addon tax_percentage_symbol hide">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="pull-left btn btn-default no_tax_btn">Clear Tax</span>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

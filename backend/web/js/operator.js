@@ -89,13 +89,62 @@ $(document).ready(function () {
     $('.no_discount_btn').click(function () {
         var current_discount = parseFloat($('#discount').attr('data-value'));
 
-        if (current_discount !== 0) {   
+        if (current_discount !== 0) {
             $('#edit_discount_input').val(0);
             $('#discount').attr('data-value', 0).text(formatCurrency(0));
             calculateTotal();
         }
 
         $('#edit_discount_modal').modal('hide');
+    });
+
+    // --------- SHOW EDIT TAX MODAL -----------
+    $('.summary .tax').on('click', function () {
+        $('#edit_tax_modal').modal();
+    });
+
+    // ----------- DETERMINE TAX TYPE ------------
+    $('.tax_type_btn_group button').click(function () {
+        $(this).addClass('active').siblings().removeClass('active');
+
+        if ($(this).is('.tax_by_value'))
+        {
+            $('.tax_percentage_symbol').addClass('hide');
+            $('#tax').attr('data-type', 'by_value');
+        }
+        else {
+            $('#edit_tax_input').val(10);
+            $('.tax_percentage_symbol').removeClass('hide');
+            $('#tax').attr('data-type', 'by_percentage');
+        }
+    });
+
+    // --------- CALCULATE TAX -----------
+    $('#form_edit_tax').submit(function () {
+        if ($('.tax_by_value').is('.active'))
+        {
+            $('#tax').attr('data-type', 'by_value');
+        }
+        else {
+            $('#tax').attr('data-type', 'by_percentage');
+        }
+
+        calculateTotal();
+        
+        $('#edit_tax_modal').modal('hide');
+        
+        return false;
+    });
+    $('.no_tax_btn').click(function () {
+        var current_tax = parseFloat($('#tax').attr('data-value'));
+
+        if (current_tax !== 0) {
+            $('#edit_tax_input').val(0);
+            $('#tax').attr('data-value', 0).text(formatCurrency(0));
+            calculateTotal();
+        }
+
+        $('#edit_tax_modal').modal('hide');
     });
 
     // ------------  EDIT PRODUCT ON CART --------------
@@ -234,7 +283,7 @@ $(document).ready(function () {
 
     function deleteItemFromCart(cart_item)
     {
-        cart_item.fadeOut('fast', function () {$(this).remove(); calculateTotal()});
+        cart_item.fadeOut('fast', function () {$(this).remove(); calculateTotal();});
     }
 
     function calculateDiscount()
@@ -266,6 +315,31 @@ $(document).ready(function () {
         discount.toFixed(2);
 
         return discount;
+    }
+
+    function calculateTax()
+    {
+        var tax = 0.00;
+
+        if ($('#tax').attr('data-type') == 'by_value')
+        {
+            tax = parseFloat($('#edit_tax_input').val());
+        }
+        else {
+            tax = calculateTaxByPercentage();
+        }
+
+        $('#tax').attr('data-value', tax).text(formatCurrency(tax));
+    }
+
+    function calculateTaxByPercentage()
+    {
+        var tax = 0.00;
+
+        tax = parseFloat($('#edit_tax_input').val()) / 100 * ($('#subtotal').attr('data-value') - $('#discount').attr('data-value'));
+        tax.toFixed(2);
+
+        return tax;
     }
 
     // calculate subtotal for each product
@@ -305,6 +379,7 @@ $(document).ready(function () {
         calculateDiscount();
         discount = $('#discount').attr('data-value');
 
+        calculateTax();
         tax = $('#tax').attr('data-value');
 
         total = parseFloat(subtotal) + parseFloat(tax) - discount;
