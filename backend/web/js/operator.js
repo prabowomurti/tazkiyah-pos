@@ -48,6 +48,56 @@ $(document).ready(function () {
 
     });
 
+    // --------- SHOW EDIT DISCOUNT MODAL -----------
+    $('.summary .discount').on('click', function () {
+        $('#edit_discount_modal').modal();
+    });
+
+    // ----------- DETERMINE DISCOUNT TYPE ------------
+    $('.discount_type_btn_group button').click(function () {
+        $(this).addClass('active').siblings().removeClass('active');
+
+        if ($(this).is('.discount_by_value'))
+        {
+            $('#edit_discount_input').removeAttr('max').attr('step', 0.01);
+            $('.discount_percentage_symbol').addClass('hide');
+            $('#discount').attr('data-type', 'by_value');
+        }
+        else {
+            $('#edit_discount_input').attr({'max' : 99, 'step' : 1}).val(10);
+            $('.discount_percentage_symbol').removeClass('hide');
+            $('#discount').attr('data-type', 'by_percentage');
+        }
+    });
+
+    // --------- CALCULATE DISCOUNT -----------
+    $('#form_edit_discount').submit(function () {
+        if ($('.discount_by_value').is('.active'))
+        {
+            $('#discount').attr('data-type', 'by_value');
+        }
+        else {
+            $('#discount').attr('data-type', 'by_percentage');
+        }
+
+        calculateTotal();
+        
+        $('#edit_discount_modal').modal('hide');
+        
+        return false;
+    });
+    $('.no_discount_btn').click(function () {
+        var current_discount = parseFloat($('#discount').attr('data-value'));
+
+        if (current_discount !== 0) {   
+            $('#edit_discount_input').val(0);
+            $('#discount').attr('data-value', 0).text(formatCurrency(0));
+            calculateTotal();
+        }
+
+        $('#edit_discount_modal').modal('hide');
+    });
+
     // ------------  EDIT PRODUCT ON CART --------------
     $('.cart').on('click', '.cart-item .cell-description', function () {
 
@@ -153,9 +203,11 @@ $(document).ready(function () {
 
         row.find('.cell-description').html(product_label);
         row.find('.cell-unit-price').text(formatCurrency(1*product.data('price') + 1*product_attribute_price));
-        row.find('.cell-subtotal').text(formatCurrency(product.data('price')));
+        row.find('.cell-subtotal').attr('data-value', product.data('price')).text(formatCurrency(product.data('price')));
         
         row.clone(true).insertBefore('.row-add_product').hide().fadeIn(350);
+
+        calculateTotal();
     }
 
     function increaseQuantity(input_quantity)
@@ -182,7 +234,38 @@ $(document).ready(function () {
 
     function deleteItemFromCart(cart_item)
     {
-        cart_item.fadeOut('fast', function () {$(this).remove();});
+        cart_item.fadeOut('fast', function () {$(this).remove(); calculateTotal()});
+    }
+
+    function calculateDiscount()
+    {
+        var discount = 0.00;
+
+        if ($('#discount').attr('data-type') == 'by_value')
+        {
+            discount = parseFloat($('#edit_discount_input').val());
+        }
+        else {
+            discount = calculateDiscountByPercentage();
+        }
+
+        var subtotal = parseFloat($('#subtotal').attr('data-value'));
+        if (discount > subtotal)
+        {
+            discount = subtotal;
+        }
+
+        $('#discount').attr('data-value', discount).text(formatCurrency(discount));
+    }
+
+    function calculateDiscountByPercentage()
+    {
+        var discount = 0.00;
+
+        discount = parseFloat($('#edit_discount_input').val()) / 100 * $('#subtotal').attr('data-value');
+        discount.toFixed(2);
+
+        return discount;
     }
 
     // calculate subtotal for each product
@@ -200,14 +283,33 @@ $(document).ready(function () {
         var quantity = Math.abs(cart_item.find('.cell-quantity input').val()) || 0;
 
         var subtotal = unit_price * quantity - discount;
-        cart_item.find('.cell-subtotal').text(formatCurrency(subtotal));
+        cart_item.find('.cell-subtotal').attr('data-value', subtotal).text(formatCurrency(subtotal));
 
         calculateTotal();
     }
 
+    // calculate total from all subtotal, tax, and discount
     function calculateTotal()
     {
-        console.log('Calculate Total...');
+        var subtotal = 0;
+        var discount;
+        var tax;
+        var total;
+
+        $('.cart .cart-item').each(function (index, element) {
+            subtotal += parseFloat($(this).find('.cell-subtotal').attr('data-value'));
+        });
+
+        $('#subtotal').attr('data-value', subtotal).text(formatCurrency(subtotal));
+
+        calculateDiscount();
+        discount = $('#discount').attr('data-value');
+
+        tax = $('#tax').attr('data-value');
+
+        total = parseFloat(subtotal) + parseFloat(tax) - discount;
+        $('#total').attr('data-value', total).text(formatCurrency(total));
+
     }
 });
 

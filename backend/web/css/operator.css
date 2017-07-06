@@ -105,8 +105,12 @@
     margin-top: -3px;
 }
 .cell-quantity-input input,
-.cell-discount-input {
+.cell-discount-input,
+#edit_discount_input {
     text-align: right;
+}
+.discount_percentage_symbol {
+    border-radius: 0px;
 }
 .cell-discount-input {
     width: 90%;
@@ -123,8 +127,9 @@
 .cell-discount-input::-webkit-inner-spin-button,
 .cell-discount-input::-webkit-outer-spin-button,
 .product-quantity::-webkit-inner-spin-button,
-.product-quantity::-webkit-outer-spin-button
- {
+.product-quantity::-webkit-outer-spin-button,
+#edit_discount_input::-webkit-inner-spin-button,
+#edit_discount_input::-webkit-outer-spin-button {
         -webkit-appearance: none;
     margin: 0;
 }
@@ -163,7 +168,10 @@
     padding-top: 8px;
     padding-bottom: 8px;
 }
-
+.summary .discount,
+.summary .tax {
+    cursor: pointer;
+}
 .summary .discount span{
     color: #ffd3d3;
 }

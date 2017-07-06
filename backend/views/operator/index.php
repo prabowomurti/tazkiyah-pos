@@ -61,16 +61,16 @@ $this->title = \common\models\Setting::t('app_name') . ' - Operator';
                 </span>
             </div>
             <div class="col-xs-12 subtotal">
-                Subtotal <span class="pull-right">25,500</span>
+                Subtotal <span class="pull-right" id="subtotal" data-value="0">0</span>
             </div>
             <div class="col-xs-12 discount">
-                Discount <span class="pull-right">- 500</span>
+                Discount <span class="pull-right">- <span id="discount" data-value="0" data-type="by_value">0</span></span>
             </div>
             <div class="col-xs-12 tax">
-                Tax <span class="pull-right">0</span>
+                Tax <span class="pull-right" id="tax" data-value="0">0</span>
             </div>
-            <div class="col-xs-12 total">
-                25,000
+            <div class="col-xs-12 total" id="total" data-value="0">
+                0
             </div>
             <div class="col-xs-12 cash-buttons">
                 <div class="col-xs-6 btn cash">Cash</div>
@@ -107,7 +107,7 @@ $this->title = \common\models\Setting::t('app_name') . ' - Operator';
             <td class="cell-description"></td>
             <td class="cell-quantity">
                 <div class="input-group input-group-sm cell-quantity-input">
-                    <label class="btn input-group-addon decrease-quantity"><span class="fa fa-minus"></span></label>
+                    <span class="btn input-group-addon decrease-quantity"><span class="fa fa-minus"></span></span>
                     <input type="number" class="product-quantity form-control" min="1" value="1" step=0.01/>
                     <span class="btn input-group-addon increase-quantity"><span class="fa fa-plus"></span></span>
                 </div>
@@ -154,6 +154,45 @@ $this->title = \common\models\Setting::t('app_name') . ' - Operator';
                 </div>
                 <div class="modal-footer">
                     <span class="btn btn-danger pull-left remove_from_cart_btn" >Remove</span>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL of .DISCOUNT EDIT -->
+<div class="modal" id="edit_discount_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span></span>Edit Discount</h4>
+            </div>
+            <form class="form form-horizontal" id="form_edit_discount">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="edit_discount_type">Type</label>
+                        <div class="col-md-6">
+                            <div class="btn-group discount_type_btn_group">
+                                <button type="button" class="btn btn-default active discount_by_value">By Value</button>
+                                <button type="button" class="btn btn-default discount_by_percentage">By Percentage</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="edit_discount_input">Discount</label>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                                <input id="edit_discount_input" type="number" step=0.01 min=0 class="form-control" value="0"/>
+                                <span class="input-group-addon discount_percentage_symbol hide">%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="pull-left btn btn-default no_discount_btn">Clear Discount</span>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <input type="submit" class="btn btn-primary" value="Save"/>
                 </div>
