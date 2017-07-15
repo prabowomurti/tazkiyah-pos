@@ -133,7 +133,7 @@ class UserController extends ZeedController
             // update password
             if ( ! empty($post_user['password']))
             {
-                if (strlen($model->password) < 6)
+                if (strlen($post_user['password']) < 6)
                 {
                     $model->addError('password', 'Password should contain at least 6 characters.');
                     return $this->render('update', [
@@ -171,7 +171,7 @@ class UserController extends ZeedController
             // update password
             if ( ! empty($post_user['password']))
             {
-                if (strlen($model->password) < 6)
+                if (strlen($post_user['password']) < 6)
                 {
                     $model->addError('password', 'Password should contain at least 6 characters.');
                     return $this->render('update', [
