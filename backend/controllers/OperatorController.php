@@ -68,14 +68,21 @@ class OperatorController extends ZeedController
 
         $all_products = Product::find()->
             where(['visible' => 1])->
+            orderBy('label')->
+            all();
+
+        $products_as_array = Product::find()->
+            where(['visible' => 1])->
             select('label, id')->
             orderBy('position')->
             indexBy('id')->
             column();
+
         
         return $this->render('index', [
             'products' => $products,
-            'all_products' => $all_products
+            'all_products' => $all_products,
+            'products_as_array' => $products_as_array
             ]);
     }
 }

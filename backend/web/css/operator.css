@@ -216,7 +216,7 @@
 /* -=-=-=-=-=-= PRODUCTS -=-=-=-=-=-=*/
 .products {
     position: absolute;
-    bottom: 42px;
+    bottom: 12px;
     left: 0;
 }
 .products .col-xs-12:nth-child(1) .product {
@@ -240,9 +240,4 @@
 
 .product:hover {
     background-color: #F8F8F8;
-}
-
-.search-products {
-    position: absolute;
-    bottom: 2px;
 }

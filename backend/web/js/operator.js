@@ -6,6 +6,21 @@ $(document).ready(function () {
         $(this).toggleClass('active');
     });
 
+    // --------------- SHOW PRODUCT SEARCH MODAL ---------------
+    $('.row-add_product').click(function () {
+        $('#add_product_modal').modal();
+    });
+    // --------------- INPUT PRODUCT TO THE CART FROM SEARCH MODAL ---------------
+    $('#form_add_product').submit(function () {
+        var product_id = $('select[name=product_name]').val();
+        var cart_item = $('.all_products .cart-item[data-product-id=' + product_id + ']');
+
+        addProductToCart(cart_item);
+        
+        $('#add_product_modal').modal('hide');
+        return false;
+    });
+
     // --------- INCREASE/DECREASE QUANTITY ----------
     $('.cart').on('click', '.increase-quantity', function () {
         increaseQuantity($(this).prev());
@@ -16,7 +31,10 @@ $(document).ready(function () {
 
     // ------------ RECALCULATE SUBTOTAL WHEN PRODUCT QUANTITY IS CHANGED --------------
     $('.cart').on('change keyup paste propertychange', 'input.product-quantity', function () {
-        calculateSubTotal($(this).parent().parent().parent());
+        var cart_item = $(this).closest('.cart-item');
+        setItemDataQuantity(cart_item, parseFloat($(this).val(), 10).toFixed(2));
+
+        calculateSubTotal(cart_item);
     });
 
     // --------- RECALCULATE SUBTOTAL WHEN DISCOUNT IS CHANGED -----------
@@ -36,7 +54,9 @@ $(document).ready(function () {
 
     // --------- ADD SELECTED PRODUCT TO CART -----------
     $('.product').on('click', function () {
-        addProductToCart($(this));
+        var product_id = $(this).attr('data-id');
+        var cart_item = $('.all_products .cart-item[data-product-id=' + product_id + ']');
+        addProductToCart(cart_item);
     });
 
     // --------- BEAUTIFY DISCOUNT VALUE -----------
@@ -193,38 +213,29 @@ $(document).ready(function () {
             cart_item.find('small').text($('#edit_item_modal_attributes option:selected').text());
         }
 
+        // TODO ........
+        // check if the combination of attributes is already in the cart. Merge the quantity
+
         calculateSubTotal(cart_item);
 
         $('#edit_item_options_modal').modal('hide');
         return false;
     });
 
-    function addProductToCart(product)
+    function addProductToCart(cart_item)
     {
-        // checking if there is selected product in cart
-        var existed_product = $('.cart tr[data-product-id=' + product.data('id') + ']');
-        var product_label = product.data('label');
+        
+        var product_id = cart_item.attr('data-product-id');
+        var existed_product = $('.cart tr[data-product-id=' + product_id + ']');
         var product_attribute_id;
-        var product_attributes = [];
 
-        var product_attribute_price = 0;
-
-        if (product.has('.attributes').length)
+        // check if the product has attributes
+        if (cart_item.attr('data-product-attribute-id') > 0)
         {
-            var first_attribute = product.find('.attributes .attribute:first');
-            product_attribute_id = first_attribute.data('id');
-            product_label = product_label + ' <small>' + first_attribute.data('label') + '</small>';
-            product_attribute_price = first_attribute.data('price');
+            var attributes = JSON.parse(cart_item.attr('data-product-attributes'));
+            var first_attribute = attributes[0];
 
-            existed_product = $('.cart tr[data-product-id=' + product.data('id') + '][data-product-attribute-id=' + product_attribute_id + ']');
-
-            // include all attributes data, so the operator can select it later
-            product.find('.attributes .attribute').each(function (index, element) {
-                product_attributes[index] = {};
-                product_attributes[index].id = $(element).data('id');
-                product_attributes[index].label = $(element).data('label');
-                product_attributes[index].price = $(element).data('price');
-            });
+            existed_product = $('.cart tr[data-product-id=' + product_id + '][data-product-attribute-id=' + first_attribute['id'] + ']');
         }
 
         if (existed_product.length)
@@ -233,52 +244,42 @@ $(document).ready(function () {
             return;
         }
 
-        var row = $('.product_template_for_cart tr');
-        row.attr('data-product-id', product.data('id'));
-        row.attr('data-product-price', product.data('price'));
-
-        if (product_attributes.length)
-        {
-            row.attr('data-product-attributes', JSON.stringify(product_attributes));
-            row.attr('data-product-attribute-id', product_attribute_id);
-            row.attr('data-product-attribute-price', product_attribute_price);
-        }
-        else {
-            // clear previous data
-            row.attr('data-product-attributes', '');
-            row.attr('data-product-attribute-id', '');
-            row.attr('data-product-attribute-price', '');
-        }
-
-        row.find('.cell-description').html(product_label);
-        row.find('.cell-unit-price').text(formatCurrency(1*product.data('price') + 1*product_attribute_price));
-        row.find('.cell-subtotal').attr('data-value', product.data('price')).text(formatCurrency(product.data('price')));
-        
-        row.clone(true).insertBefore('.row-add_product').hide().fadeIn(350);
-
+        cart_item.clone(true).insertBefore('.row-add_product').hide().fadeIn(350);
         calculateTotal();
     }
 
     function increaseQuantity(input_quantity)
     {
-        var oldVal = input_quantity.val();
-        input_quantity.val(parseInt(oldVal, 10) + 1);
+        var new_quantity = parseInt(input_quantity.val(), 10) + 1;
+        input_quantity.val(new_quantity);
+        var cart_item = input_quantity.closest('.cart-item');
+        setItemDataQuantity(cart_item, new_quantity);
 
-        calculateSubTotal(input_quantity.parent().parent().parent());
+        calculateSubTotal(cart_item);
     }
 
     function decreaseQuantity(input_quantity)
     {
         var oldVal = input_quantity.val();
+        var cart_item = input_quantity.closest('.cart-item');
+        var new_quantity;
         if (oldVal >= 2)
-            input_quantity.val(parseInt(oldVal, 10) - 1);
+            new_quantity = parseInt(oldVal, 10) - 1;
         else if (oldVal > 1)
-            input_quantity.val(1);
+            new_quantity = 1;
         else {
-            deleteItemFromCart(input_quantity.closest('tr'));
+            deleteItemFromCart(cart_item);
         }
+        
+        input_quantity.val(new_quantity);
+        setItemDataQuantity(cart_item, new_quantity);
 
-        calculateSubTotal(input_quantity.parent().parent().parent());
+        calculateSubTotal(cart_item);
+    }
+
+    function setItemDataQuantity(cart_item, quantity)
+    {
+        cart_item.attr('data-quantity', quantity);
     }
 
     function deleteItemFromCart(cart_item)
@@ -351,12 +352,13 @@ $(document).ready(function () {
             unit_price+= 1*cart_item.attr('data-product-attribute-price');
         }
 
-        cart_item.find('.cell-unit-price').text(formatCurrency(unit_price));
+        cart_item.attr('data-product-price', unit_price).find('.cell-unit-price').text(formatCurrency(unit_price));
 
         var discount = +Math.abs(cart_item.find('.cell-discount-input').val()) || 0;
         var quantity = Math.abs(cart_item.find('.cell-quantity input').val()) || 0;
 
         var subtotal = unit_price * quantity - discount;
+        subtotal = subtotal < 0 ? 0 : subtotal;
         cart_item.find('.cell-subtotal').attr('data-value', subtotal).text(formatCurrency(subtotal));
 
         calculateTotal();

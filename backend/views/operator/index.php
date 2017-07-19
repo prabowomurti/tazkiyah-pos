@@ -1,14 +1,17 @@
 <?php 
 
 $this->title = \common\models\Setting::t('app_name') . ' - Operator';
+
+use kartik\select2\Select2;
+
 ?>
 <div id="home" class="tab-pane">
-    Home
+    Home page is under construction
 </div>
 
 <!-- Customer -->
 <div id="customer" class="tab-pane">
-    Customer
+    Customer page is under construction
 </div>
 <!-- /Customer -->
 
@@ -87,17 +90,8 @@ $this->title = \common\models\Setting::t('app_name') . ' - Operator';
 
         <div class="col-xs-12">
         <?php foreach($products_chunk as $product) : ?>
-            <div class="col-xs-2 product" data-id="<?= $product->id?>" data-label="<?= $product->label;?>" data-price="<?= $product->price?>">
+            <div class="col-xs-2 product" data-id="<?= $product->id?>">
                 <?= $product->label;?>
-                <?php if ( ! empty($product->productAttributes)) : ?>
-                <span class="attributes hidden">
-                    <?php foreach ($product->productAttributes as $product_attribute) : ?>
-                    <span class="attribute" data-id="<?= $product_attribute->id?>" 
-                        data-label="<?= $product_attribute->attributeCombinationLabel?>" 
-                        data-price="<?= $product_attribute->price?>"></span>
-                    <?php endforeach;?>
-                </span>
-                <?php endif;?>
             </div>
         <?php endforeach;?>
         </div>
@@ -117,13 +111,49 @@ $this->title = \common\models\Setting::t('app_name') . ' - Operator';
             <td class="cell-subtotal"></td>
         </tr>
     </table>
+
+    <table class="all_products hide">
+        <?php foreach ($all_products as $index => $product) :
+            $product_attribute_id = null;
+            $product_price = $product->price;
+            $product_label = $product->label;
+            $product_attributes = '';
+
+            $attribute_price = 0;
+            if ($product->productAttributes) :
+
+                $first_attribute = $product->productAttributes{0};
+                $product_attribute_id = $first_attribute->id;
+                $attribute_price = $first_attribute->price;
+                $product_price += $attribute_price;
+                $product_label .= ' <small>' . $first_attribute->attributeCombinationLabel . '</small>';
+                $tmp = [];
+                foreach ($product->productAttributes as $attribute)
+                {
+                    $tmp[] = ['id' => $attribute->id, 'label' => $attribute->attributeCombinationLabel, 'price' => $attribute->price];
+                }
+                $product_attributes = json_encode($tmp);
+            endif;
+        ?>
+        <tr class="cart-item" data-product-id="<?= $product->id?>" data-product-attribute-id="<?= $product_attribute_id;?>" 
+            data-product-attributes='<?= $product_attributes;?>' data-product-price="<?= $product_price;?>" 
+            data-product-attribute-price="<?= $attribute_price;?>" data-note="" data-quantity="1">
+            <td class="cell-description"><?= $product_label;?></td>
+            <td class="cell-quantity">
+                <div class="input-group input-group-sm cell-quantity-input">
+                    <span class="btn input-group-addon decrease-quantity"><span class="fa fa-minus"></span></span>
+                    <input type="number" class="product-quantity form-control" min="1" value="1" step=0.01/>
+                    <span class="btn input-group-addon increase-quantity"><span class="fa fa-plus"></span></span>
+                </div>
+            </td>
+            <td class="cell-unit-price"><?= $product_price;?></td>
+            <td class="cell-discount"><input type="number" class="cell-discount-input form-control input-sm" value="0" min="1" step=0.01/></td>
+            <td class="cell-subtotal" data-value="<?= $product_price;?>"><?= $product_price;?></td>
+        </tr>
+        <?php endforeach;?>
+    </table>
     </div>
     <!-- /.products -->
-
-    <div class="col-xs-12 text-center search-products">
-        <span class="btn btn-sm btn-default" style="width: 400px">&#10507;&#10507;&#10507;</span>
-    </div>
-    
     
 </div>
 <!-- /ORDER -->
@@ -234,6 +264,36 @@ $this->title = \common\models\Setting::t('app_name') . ' - Operator';
                     <span class="pull-left btn btn-default no_tax_btn">Clear Tax</span>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <input type="submit" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL of Product Addition -->
+<div class="modal" id="add_product_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span></span>Add Product</h4>
+            </div>
+
+            <form class="form form-horizontal" id="form_add_product">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <?= Select2::widget([
+                                'name' => 'product_name',
+                                'data' => $products_as_array,
+                                'options' => ['placeholder' => 'Search Product']
+                            ]);?>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Add to Cart" />
                 </div>
             </form>
         </div>
