@@ -246,8 +246,8 @@ $(document).ready(function () {
 
         var unit_price = cart_item.attr('data-product-price');
 
-        cart_item.find('.cell-unit-price').text(formatCurrency(unit_price));
-        cart_item.find('.cell-subtotal').text(formatCurrency(unit_price));
+        cart_item.children('.cell-unit-price').text(formatCurrency(unit_price));
+        cart_item.children('.cell-subtotal').text(formatCurrency(unit_price));
 
         cart_item.clone(true).insertBefore('.row-add_product').hide().fadeIn(350);
         calculateTotal();
