@@ -31,7 +31,7 @@ class OperatorController extends ZeedController
                 'class' => AccessControl::className(),
                 'rules' => [
                     [
-                        'actions' => ['index'],
+                        'actions' => ['index', 'submit-order', 'add-customer'],
                         'allow' => true,
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action)
@@ -78,11 +78,42 @@ class OperatorController extends ZeedController
             indexBy('id')->
             column();
 
+        $customers_as_array = Customer::getAllAsList();
         
         return $this->render('index', [
             'products' => $products,
             'all_products' => $all_products,
-            'products_as_array' => $products_as_array
+            'products_as_array' => $products_as_array,
+            'customers_as_array' => $customers_as_array
             ]);
+    }
+
+    public function actionAddCustomer()
+    {
+        $model = new Customer();
+
+        if (Yii::$app->request->post()) 
+        {
+            $post = Yii::$app->request->post('Customer');
+
+            $model->username = $post['username'];
+            $model->phone    = $post['phone_number'];
+            $model->gender   = $post['gender'];
+
+            if ($model->save())
+            {
+                if ( ! Yii::$app->request->isAjax)
+                    return $this->redirect(['view', 'id' => $model->id]);
+                else 
+                {
+                    $return['id'] = $model->id;
+                    $return['label'] = $model->username . ( ! empty($model->phone) ? ' (' . $model->phone . ')' : '');
+                    return json_encode($return);
+                }
+            }
+            else 
+                return $model->errors[0];
+
+        }
     }
 }

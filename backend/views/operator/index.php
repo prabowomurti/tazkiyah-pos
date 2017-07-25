@@ -54,14 +54,14 @@ use kartik\select2\Select2;
 
         </div>
         <div class="col-xs-4 summary">
-            <div class="customer">
-                <u>Herry Drewback</u>
-                <span class="pull-right">
-                    <span class="fa-stack add-customer">
-                    <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-                    <i class="fa fa-plus fa-stack-1x"></i>
+            <div class="col-xs-12 customer">
+                <div class="col-xs-11 customer_detail" data-customer-id="">Select Customer</div>
+                <div class="col-xs-1 add_customer">
+                    <span class="fa-stack">
+                        <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
+                        <i class="fa fa-plus fa-stack-1x"></i>
                     </span>
-                </span>
+                </div>
             </div>
             <div class="col-xs-12 subtotal">
                 Subtotal <span class="pull-right" id="subtotal" data-value="0">0</span>
@@ -279,6 +279,81 @@ use kartik\select2\Select2;
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     <input type="submit" class="btn btn-primary" value="Add to Cart" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Customer MODAL -->
+<div class="modal" id="edit_customer_detail_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span></span>Select Customer</h4>
+            </div>
+
+            <form class="form form-horizontal" id="form_select_customer">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            <?= Select2::widget([
+                                'name' => 'customer_id',
+                                'data' => $customers_as_array,
+                                'options' => ['placeholder' => 'Select Customer', 'id' => 'customer_id'],
+                                'pluginOptions' => ['allowClear' => true]
+                            ]);?>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <span class="pull-left btn btn-default clear_customer">Clear</span>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Add Customer MODAL -->
+<div class="modal" id="add_customer_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span></span>Add New Customer</h4>
+            </div>
+
+            <form class="form form-horizontal" id="form_add_customer" data-url="/operator/add-customer">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="customer_name">Name</label>
+                        <div class="col-md-6">
+                            <input id="customer_name" name="Customer[username]" type="text" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="customer_phone_number">Phone Number</label>
+                        <div class="col-md-6">
+                            <input id="customer_phone_number" name="Customer[phone_number]" type="text" class="form-control"/>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-4" for="customer_gender">Gender</label>
+                        <div class="col-md-6">
+                            <select name="Customer[gender]" id="customer_gender" class="form-control">
+                                <option value="">Please Select Gender</option>
+                                <option value="female">Female</option>
+                                <option value="male">Male</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save"/>
                 </div>
             </form>
         </div>

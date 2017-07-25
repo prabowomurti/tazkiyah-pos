@@ -150,15 +150,29 @@
 
 /* -=-=-=-=-=-= SUMMARY -=-=-=-=-=-=*/
 .summary .customer {
+    display: inline-block;
+    margin: 0px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     color: #2A3F54;
     background-color: #F9F9F9;
-    padding: 16px;
+    line-height: 2.9;
+}
+.customer .customer_detail {
     font-size: 16px;
+    padding-left: 0px;
+    padding-right: 0px;
+    cursor: pointer;
+    text-decoration: underline;
 }
-.summary .customer span {
-    margin-top: -3px;
+.customer .add_customer {
+    text-align: right;
+    padding-left: 0px;
+    padding-right: 0px;
+    cursor: pointer;
+    line-height: 3.54;
+    vertical-align: middle;
 }
-
 .summary .subtotal, 
 .summary .discount {
     border-bottom: 1px dashed #F0F0F0;

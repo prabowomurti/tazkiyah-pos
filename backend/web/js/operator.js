@@ -68,6 +68,68 @@ $(document).ready(function () {
 
     });
 
+    // --------- SHOW EDIT CUSTOMER MODAL -----------
+    $('.summary .customer_detail').on('click', function () {
+        $('#edit_customer_detail_modal').modal();
+    });
+
+    // --------- EMPTY THE CUSTOMER DETAIL -----------
+    $('.clear_customer').on('click', function () {
+        $('select[name=customer_id]').val('').trigger('change');
+        $('.customer_detail').attr('data-customer-id', null).text('Select Customer');
+
+        $('#edit_customer_detail_modal').modal('hide');
+    });
+
+    // --------- SAVE THE CUSTOMER DETAIL -----------
+    $('#form_select_customer').submit(function () {
+        var customer_id = $('select[name=customer_id]').val();
+        var customer_name = $('select[name=customer_id] option:selected').text();
+        $('.customer_detail').attr('data-customer-id', customer_id).text(customer_name);;
+        
+        $('#edit_customer_detail_modal').modal('hide');
+        return false;
+    });
+
+    // --------- SHOW ADD CUSTOMER MODAL -----------
+    $('.summary .add_customer').on('click', function () {
+        $('#add_customer_modal').modal();
+    });
+
+    // --------- ADD CUSTOMER DETAIL -----------
+    $('#form_add_customer').submit(function () {
+        var customer_name = $('#customer_name').val();
+        var customer_phone = $('#customer_phone_number').val();
+        if ( ! customer_name.length)
+        {
+            alert('Please input customer name');
+            return false;
+        }
+
+        $.ajax({
+            url : $(this).attr('data-url'),
+            type : "POST",
+            data : $(this).serialize(),
+            error : function (xhr){
+                alert('Error : ' + xhr.responseText);
+            }
+        }).done(function (data){
+            var newData = JSON.parse(data);
+            var newCustomer = new Option(newData.label, newData.id, true, true);
+
+            $('#customer_id').append(newCustomer).trigger('change');
+
+            var customer_id = $('select[name=customer_id]').val();
+            var customer_name = $('select[name=customer_id] option:selected').text();
+            $('.customer_detail').attr('data-customer-id', customer_id).text(customer_name);;
+
+        });
+
+        $('#add_customer_modal').modal('hide');
+        
+        return false;
+    });
+
     // --------- SHOW EDIT DISCOUNT MODAL -----------
     $('.summary .discount').on('click', function () {
         $('#edit_discount_modal').modal();
