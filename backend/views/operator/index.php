@@ -96,21 +96,6 @@ use kartik\select2\Select2;
         <?php endforeach;?>
         </div>
     <?php endforeach;?>
-    <table class="product_template_for_cart hidden">
-        <tr class="cart-item" data-product-id="" data-product-attribute-id="" data-product-attributes='' data-product-price="" data-product-attribute-price="" data-note="" data-quantity="">
-            <td class="cell-description"></td>
-            <td class="cell-quantity">
-                <div class="input-group input-group-sm cell-quantity-input">
-                    <span class="btn input-group-addon decrease-quantity"><span class="fa fa-minus"></span></span>
-                    <input type="number" class="product-quantity form-control" min="1" value="1" step=0.01/>
-                    <span class="btn input-group-addon increase-quantity"><span class="fa fa-plus"></span></span>
-                </div>
-            </td>
-            <td class="cell-unit-price"></td>
-            <td class="cell-discount"><input type="number" class="cell-discount-input form-control input-sm" value="0" min="1" step=0.01/></td>
-            <td class="cell-subtotal"></td>
-        </tr>
-    </table>
 
     <table class="all_products hide">
         <?php foreach ($all_products as $index => $product) :
