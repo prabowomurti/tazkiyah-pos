@@ -204,28 +204,53 @@
     color: #2A3F54;
 }
 
-.cash-buttons {
+.cash-buttons, .more-buttons {
     padding-left: 0px;
     padding-right: 0px;
 }
 .cash-buttons .cash,
-.cash-buttons .credit {
+.cash-buttons .credit,
+.more-buttons .save-button,
+.more-buttons .more-button
+ {
     margin: 0px;
     border-radius: 3px;
     border: 1px solid white;
     padding-top: 12px;
     padding-bottom: 12px;
-    color: #F0F0F0;
-    background-color: #2A3F54;
     text-transform: uppercase;
     font-size: 14px;
     font-weight: 300;
     letter-spacing: 4px;
 }
+.more-buttons .btn {
+    color: #2A3F54;
+    background-color: #E9E9E9;
+    font-weight: 400;
+}
+.more-buttons .dropdown-menu{
+    padding-top: 4px;
+}
+.more-buttons .dropdown-menu > li {
+    height: 46px;
+    line-height: 46px;
+    vertical-align: middle;
+}
+.more-buttons .dropdown-menu > li > a {
+    line-height: 36px;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-align: center;
+    font-weight: 300;
+}
+.cash-buttons .btn {
+    color: #F0F0F0;    
+    background-color: #2A3F54;
+}
 .cash-buttons .btn:hover {
     background-color: #73879C;
 }
-
 
 /* -=-=-=-=-=-= PRODUCTS -=-=-=-=-=-=*/
 .products {

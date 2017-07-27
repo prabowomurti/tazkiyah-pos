@@ -75,9 +75,18 @@ use kartik\select2\Select2;
             <div class="col-xs-12 total" id="total" data-value="0">
                 0
             </div>
+            <div class="col-xs-12 more-buttons dropup">
+                <div class="col-xs-6 btn save-button">Save</div>
+                <div class="col-xs-6 btn more-button dropdown-toggle" data-toggle="dropdown">More</div>
+                <ul class="dropdown-menu dropdown-menu-right">
+                    <!-- <li><a href="">Split Tender</a></li> -->
+                    <li><a href="#" class="empty_cart_button">Empty Cart</a></li>
+                    <li><a href="#" class="edit_order_note_button">Edit Note</a></li>
+                </ul>
+            </div>
             <div class="col-xs-12 cash-buttons">
-                <div class="col-xs-6 btn cash">Cash</div>
-                <div class="col-xs-6 btn credit">Credit</div>
+                <div class="col-xs-12 btn cash">Cash</div>
+                <!-- <div class="col-xs-12 btn cash">Credit</div> -->
             </div>
         </div>
 
@@ -155,14 +164,14 @@ use kartik\select2\Select2;
                 <input type="hidden" class="cart_item_index" value=""/>
                 <div class="modal-body">
                     <div class="form-group edit_item_model_attribute">
-                        <label class="control-label col-md-4" for="edit_item_modal_attributes">Product Attribute</label>
-                        <div class="col-md-6">
+                        <label class="control-label col-xs-4 col-xs-4" for="edit_item_modal_attributes">Product Attribute</label>
+                        <div class="col-xs-6 ">
                             <select id="edit_item_modal_attributes" name="attributes" class="form-control"></select>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="item_note">Item Note</label>
-                        <div class="col-md-6">
+                        <label class="control-label col-xs-4" for="item_note">Item Note</label>
+                        <div class="col-xs-6">
                             <input id="edit_item_modal_note" type="text" class="form-control" />
                         </div>
                     </div>
@@ -188,8 +197,8 @@ use kartik\select2\Select2;
             <form class="form form-horizontal" id="form_edit_discount">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="edit_discount_type">Type</label>
-                        <div class="col-md-6">
+                        <label class="control-label col-xs-4" for="edit_discount_type">Type</label>
+                        <div class="col-xs-6">
                             <div class="btn-group discount_type_btn_group">
                                 <button type="button" class="btn btn-default active discount_by_value">By Value</button>
                                 <button type="button" class="btn btn-default discount_by_percentage">By Percentage</button>
@@ -197,8 +206,8 @@ use kartik\select2\Select2;
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="edit_discount_input">Discount</label>
-                        <div class="col-md-4">
+                        <label class="control-label col-xs-4" for="edit_discount_input">Discount</label>
+                        <div class="col-xs-4">
                             <div class="input-group">
                                 <input id="edit_discount_input" type="number" step=0.01 min=0 class="form-control" value="0"/>
                                 <span class="input-group-addon discount_percentage_symbol hide">%</span>
@@ -227,8 +236,8 @@ use kartik\select2\Select2;
             <form class="form form-horizontal" id="form_edit_tax">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="edit_tax_type">Type</label>
-                        <div class="col-md-6">
+                        <label class="control-label col-xs-4" for="edit_tax_type">Type</label>
+                        <div class="col-xs-6">
                             <div class="btn-group tax_type_btn_group">
                                 <button type="button" class="btn btn-default active tax_by_value">By Value</button>
                                 <button type="button" class="btn btn-default tax_by_percentage">By Percentage</button>
@@ -236,8 +245,8 @@ use kartik\select2\Select2;
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="edit_tax_input">Tax</label>
-                        <div class="col-md-4">
+                        <label class="control-label col-xs-4" for="edit_tax_input">Tax</label>
+                        <div class="col-xs-4">
                             <div class="input-group">
                                 <input id="edit_tax_input" type="number" step=0.01 min=0 class="form-control" value="0"/>
                                 <span class="input-group-addon tax_percentage_symbol hide">%</span>
@@ -267,7 +276,7 @@ use kartik\select2\Select2;
             <form class="form form-horizontal" id="form_add_product">
                 <div class="modal-body">
                     <div class="form-group">
-                        <div class="col-md-12">
+                        <div class="col-md-12 col-xs-12">
                             <?= Select2::widget([
                                 'name' => 'product_name',
                                 'data' => $products_as_array,
@@ -297,7 +306,7 @@ use kartik\select2\Select2;
             <form class="form form-horizontal" id="form_select_customer">
                 <div class="modal-body">
                     <div class="form-group">
-                        <div class="col-md-12">
+                        <div class="col-xs-12">
                             <?= Select2::widget([
                                 'name' => 'customer_id',
                                 'data' => $customers_as_array,
@@ -329,20 +338,20 @@ use kartik\select2\Select2;
             <form class="form form-horizontal" id="form_add_customer" data-url="/operator/add-customer">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="customer_name">Name</label>
-                        <div class="col-md-6">
+                        <label class="control-label col-xs-4" for="customer_name">Name</label>
+                        <div class="col-xs-6">
                             <input id="customer_name" name="Customer[username]" type="text" class="form-control" />
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="customer_phone_number">Phone Number</label>
-                        <div class="col-md-6">
+                        <label class="control-label col-xs-4" for="customer_phone_number">Phone Number</label>
+                        <div class="col-xs-6">
                             <input id="customer_phone_number" name="Customer[phone_number]" type="text" class="form-control"/>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="control-label col-md-4" for="customer_gender">Gender</label>
-                        <div class="col-md-6">
+                        <label class="control-label col-xs-4" for="customer_gender">Gender</label>
+                        <div class="col-xs-6">
                             <select name="Customer[gender]" id="customer_gender" class="form-control">
                                 <option value="">Please Select Gender</option>
                                 <option value="female">Female</option>
@@ -358,4 +367,39 @@ use kartik\select2\Select2;
             </form>
         </div>
     </div>
+</div>
+
+<!-- Edit Order Note MODAL -->
+<div class="modal" id="edit_order_note_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span></span>Edit Order Note</h4>
+            </div>
+
+            <form class="form form-horizontal" id="form_edit_order_note">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <textarea id="order_note" class="form-control" placeholder="Edit Order Note" ></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="receipt_panel">
+    <div class="col-xs-12">
+        <div class="col-xs-8">
+            
+        </div>
+        <div class="col-xs-4">
+        </div>
 </div>

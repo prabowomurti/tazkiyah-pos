@@ -75,17 +75,14 @@ $(document).ready(function () {
 
     // --------- EMPTY THE CUSTOMER DETAIL -----------
     $('.clear_customer').on('click', function () {
-        $('select[name=customer_id]').val('').trigger('change');
-        $('.customer_detail').attr('data-customer-id', null).text('Select Customer');
-
-        $('#edit_customer_detail_modal').modal('hide');
+        clearCustomer();
     });
 
     // --------- SAVE THE CUSTOMER DETAIL -----------
     $('#form_select_customer').submit(function () {
         var customer_id = $('select[name=customer_id]').val();
         var customer_name = $('select[name=customer_id] option:selected').text();
-        $('.customer_detail').attr('data-customer-id', customer_id).text(customer_name);;
+        $('.customer_detail').attr('data-customer-id', customer_id).text(customer_name);
         
         $('#edit_customer_detail_modal').modal('hide');
         return false;
@@ -121,7 +118,7 @@ $(document).ready(function () {
 
             var customer_id = $('select[name=customer_id]').val();
             var customer_name = $('select[name=customer_id] option:selected').text();
-            $('.customer_detail').attr('data-customer-id', customer_id).text(customer_name);;
+            $('.customer_detail').attr('data-customer-id', customer_id).text(customer_name);
 
         });
 
@@ -169,15 +166,7 @@ $(document).ready(function () {
         return false;
     });
     $('.no_discount_btn').click(function () {
-        var current_discount = parseFloat($('#discount').attr('data-value'));
-
-        if (current_discount !== 0) {
-            $('#edit_discount_input').val(0);
-            $('#discount').attr('data-value', 0).text(formatCurrency(0));
-            calculateTotal();
-        }
-
-        $('#edit_discount_modal').modal('hide');
+        clearDiscount();
     });
 
     // --------- SHOW EDIT TAX MODAL -----------
@@ -218,15 +207,31 @@ $(document).ready(function () {
         return false;
     });
     $('.no_tax_btn').click(function () {
-        var current_tax = parseFloat($('#tax').attr('data-value'));
+        clearTax();
+    });
 
-        if (current_tax !== 0) {
-            $('#edit_tax_input').val(0);
-            $('#tax').attr('data-value', 0).text(formatCurrency(0));
-            calculateTotal();
-        }
+    // ------------  SAVE ORDER BUTTON --------------
+    $('.save-button').click(function () {
+        saveOrder();
+        emptyCart();
+    });
+    $('.empty_cart_button').click(function (e) {
+        e.preventDefault();
 
-        $('#edit_tax_modal').modal('hide');
+        if ( ! confirm('Are you sure to empty the cart?')) return false;
+        
+        emptyCart();
+    });
+
+    // ------------  EDIT ORDER NOTE --------------
+    $('.edit_order_note_button').click(function (e) {
+        e.preventDefault();
+        $('#edit_order_note_modal').modal();
+
+    });
+    $('#form_edit_order_note').submit(function () {
+        $('#edit_order_note_modal').modal('hide');
+        return false;
     });
 
     // ------------  EDIT PRODUCT ON CART --------------
@@ -354,6 +359,14 @@ $(document).ready(function () {
         cart_item.fadeOut('fast', function () {$(this).remove(); calculateTotal();});
     }
 
+    function clearCustomer()
+    {
+        $('select[name=customer_id]').val('').trigger('change');
+        $('.customer_detail').attr('data-customer-id', null).text('Select Customer');
+
+        $('#edit_customer_detail_modal').modal('hide');
+    }
+
     function calculateDiscount()
     {
         var discount = 0.00;
@@ -385,6 +398,19 @@ $(document).ready(function () {
         return discount;
     }
 
+    function clearDiscount()
+    {
+        var current_discount = parseFloat($('#discount').attr('data-value'));
+
+        if (current_discount !== 0) {
+            $('#edit_discount_input').val(0);
+            $('#discount').attr('data-value', 0).text(formatCurrency(0));
+            calculateTotal();
+        }
+
+        $('#edit_discount_modal').modal('hide');
+    }
+
     function calculateTax()
     {
         var tax = 0.00;
@@ -408,6 +434,19 @@ $(document).ready(function () {
         tax.toFixed(2);
 
         return tax;
+    }
+
+    function clearTax()
+    {
+        var current_tax = parseFloat($('#tax').attr('data-value'));
+
+        if (current_tax !== 0) {
+            $('#edit_tax_input').val(0);
+            $('#tax').attr('data-value', 0).text(formatCurrency(0));
+            calculateTotal();
+        }
+
+        $('#edit_tax_modal').modal('hide');
     }
 
     // calculate subtotal for each product
@@ -454,6 +493,45 @@ $(document).ready(function () {
         total = parseFloat(subtotal) + parseFloat(tax) - discount;
         $('#total').attr('data-value', total).text(formatCurrency(total));
 
+    }
+
+    function emptyCart()
+    {
+        clearCart();
+        clearCustomer();
+        clearDiscount();
+        clearTax();
+
+        $('#subtotal').attr('data-value', 0).text(0);
+        $('#total').attr('data-value', 0).text(0);
+    }
+
+    function clearCart()
+    {
+        $('.cart > tbody tr:not(:last)').fadeOut('fast', function () {$(this).remove();});
+    }
+
+    function saveOrder()
+    {
+        var customer_id = $('.customer_detail').attr('data-customer-id');
+        if ( ! customer_id.length)
+        {
+            alert('Please select customer for the order');
+            return false;
+        }
+
+        // TODO ajax call to action controller
+        // TODO if success, empty cart
+        emptyCart();
+        
+    }
+
+    function cashOrder()
+    {
+        // TODO hide cart panel
+        // TODO show receipt panel
+        // TODO ajax call to action controller
+        
     }
 });
 
