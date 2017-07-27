@@ -42,6 +42,61 @@ $(document).ready(function () {
         calculateSubTotal($(this).parent().parent());
     });
 
+    // ------------  EDIT PRODUCT ON CART --------------
+    $('.cart').on('click', '.cart-item .cell-description', function () {
+
+        var cart_item = $(this).parent();
+
+        if (cart_item.attr('data-product-attribute-id') > 0)
+        {
+            var attributes = JSON.parse(cart_item.attr('data-product-attributes'));
+            var list = '';
+            // showing all product attributes from JSON data
+            for (var i = 0; i < attributes.length; i ++)
+            {
+                list += '<option value=' + attributes[i].id + ' data-price=' + attributes[i].price +'>' + attributes[i].label + '</option>';
+            }
+
+            $('#edit_item_modal_attributes').html(list);
+            // set selected value based on previous product-attribute-id
+            $('#edit_item_modal_attributes').val(cart_item.attr('data-product-attribute-id'));
+            $('.edit_item_model_attribute').show();
+        }
+        else {
+            $('.edit_item_model_attribute').hide();
+        }
+        
+        $('#edit_item_modal_note').val(cart_item.attr('data-note'));
+        $('#form_edit_item_options .cart_item_index').val(cart_item.index());
+
+        $('#edit_item_options_modal').modal();
+    });
+
+    // ------------- SAVE THE NOTE AND ATTRIBUTE-ID TO THE .CART-ITEM -----------------
+    $('#form_edit_item_options').submit(function () {
+
+        // saving the note
+        var item_index = $('#form_edit_item_options .cart_item_index').val();
+        var cart_item = $('.cart tbody').find('.cart-item').eq(item_index);
+        cart_item.attr('data-note', $('#edit_item_modal_note').val());
+        
+        // saving the attribute-id
+        if (cart_item.attr('data-product-attribute-id') > 0)
+        {
+            cart_item.attr('data-product-attribute-id', $('#edit_item_modal_attributes').val());
+            cart_item.attr('data-product-attribute-price', $('#edit_item_modal_attributes option:selected').attr('data-price'));
+            cart_item.find('small').text($('#edit_item_modal_attributes option:selected').text());
+        }
+
+        // TODO ........
+        // check if the combination of attributes is already in the cart. Merge the quantity
+
+        calculateSubTotal(cart_item);
+
+        $('#edit_item_options_modal').modal('hide');
+        return false;
+    });
+
     // --------- REMOVE ITEM FROM CART -----------
     $('.remove_from_cart_btn').on('click', function () {
         var item_index = $('#form_edit_item_options .cart_item_index').val();
@@ -210,6 +265,43 @@ $(document).ready(function () {
         clearTax();
     });
 
+    // ------------  INPUT TENDERED AMOUNT --------------
+    $('.tender_choice').click(function () {
+        var tendered = parseFloat($('.tendered').attr('data-value'));
+
+        tendered = tendered + parseFloat($(this).attr('data-value'));
+        setTenderAmount(tendered);
+    });
+    $('.clear_tendered').click(function () {
+        setTenderAmount(0);
+    });
+
+    // ------------  EDIT TENDERED AMOUNT MODAL --------------
+    $('.tendered_panel_3').click(function () {
+        $('#edit_tendered_amount_modal').modal();
+    });
+    
+    $('#form_edit_tendered_amount').submit(function () {
+        setTenderAmount($('#edit_tendered_amount_input').val());
+
+        $('#edit_tendered_amount_modal').modal('hide');
+        return false;
+    });
+
+    // ------------  DONE BUTTON --------------
+    $('.done').click(function () {
+        hideReceiptPanel();
+        hideTenderPanel();
+
+        emptyCart();
+
+        showCart();
+        showSummary();        
+        disableDoneButton();
+
+    });
+
+
     // ------------  SAVE ORDER BUTTON --------------
     $('.save-button').click(function () {
         saveOrder();
@@ -234,59 +326,19 @@ $(document).ready(function () {
         return false;
     });
 
-    // ------------  EDIT PRODUCT ON CART --------------
-    $('.cart').on('click', '.cart-item .cell-description', function () {
-
-        var cart_item = $(this).parent();
-
-        if (cart_item.attr('data-product-attribute-id') > 0)
+    // ------------  CASH ORDER AND PRINT RECEIPT --------------
+    $('.cash').click(function () {
+        var total = $('.total').attr('data-value');
+        if (total <= 0)
         {
-            var attributes = JSON.parse(cart_item.attr('data-product-attributes'));
-            var list = '';
-            // showing all product attributes from JSON data
-            for (var i = 0; i < attributes.length; i ++)
-            {
-                list += '<option value=' + attributes[i].id + ' data-price=' + attributes[i].price +'>' + attributes[i].label + '</option>';
-            }
-
-            $('#edit_item_modal_attributes').html(list);
-            // set selected value based on previous product-attribute-id
-            $('#edit_item_modal_attributes').val(cart_item.attr('data-product-attribute-id'));
-            $('.edit_item_model_attribute').show();
-        }
-        else {
-            $('.edit_item_model_attribute').hide();
-        }
-        
-        $('#edit_item_modal_note').val(cart_item.attr('data-note'));
-        $('#form_edit_item_options .cart_item_index').val(cart_item.index());
-
-        $('#edit_item_options_modal').modal();
-    });
-
-    // ------------- SAVE THE NOTE AND ATTRIBUTE-ID TO THE .CART-ITEM -----------------
-    $('#form_edit_item_options').submit(function () {
-
-        // saving the note
-        var item_index = $('#form_edit_item_options .cart_item_index').val();
-        var cart_item = $('.cart tbody').find('.cart-item').eq(item_index);
-        cart_item.attr('data-note', $('#edit_item_modal_note').val());
-        
-        // saving the attribute-id
-        if (cart_item.attr('data-product-attribute-id') > 0)
-        {
-            cart_item.attr('data-product-attribute-id', $('#edit_item_modal_attributes').val());
-            cart_item.attr('data-product-attribute-price', $('#edit_item_modal_attributes option:selected').attr('data-price'));
-            cart_item.find('small').text($('#edit_item_modal_attributes option:selected').text());
+            alert('Cart is empty');
+            return false;
         }
 
-        // TODO ........
-        // check if the combination of attributes is already in the cart. Merge the quantity
-
-        calculateSubTotal(cart_item);
-
-        $('#edit_item_options_modal').modal('hide');
-        return false;
+        hideSummary();
+        hideCart();
+        showReceiptPanel();
+        showTenderPanel();
     });
 
     function addProductToCart(cart_item)
@@ -495,12 +547,92 @@ $(document).ready(function () {
 
     }
 
+    function setTenderAmount(tendered)
+    {
+        $('.tendered').attr('data-value', tendered).text(formatCurrency(tendered));
+        $('#edit_tendered_amount_input').val(tendered);
+
+        calculateChange();
+    }
+
+    /**
+     * The change value should be negative
+     */
+    function calculateChange()
+    {
+        var tendered = $('.tendered').attr('data-value');
+        var total = $('.total').attr('data-value');
+        var change = total - tendered;
+        if (change > 0)
+        {
+            setChange(1); // the tendered is less than the total
+            disableDoneButton();
+        }
+        else
+        {
+            setChange(change);
+            enableDoneButton();
+        }
+    }
+
+    function setChange(change){
+        if (change > 0)
+        {
+            $('.change').attr('data-value', 0).text('-----');
+            return;
+        }
+        $('.change').attr('data-value', change).text(formatCurrency(change));
+    }
+
+    function enableDoneButton()
+    {
+        $('.done').removeAttr('disabled');
+    }
+
+    function disableDoneButton()
+    {
+        $('.done').attr('disabled', 'disabled');
+    }
+
+    function hideCart()
+    {
+        $('.cart').hide();
+    }
+
+    function showCart()
+    {
+        $('.cart').show();
+    }
+
+    function hideReceiptPanel()
+    {
+        $('.receipt_panel').hide();
+    }
+
+    function showReceiptPanel()
+    {
+        $('.receipt_panel').show();
+    }
+
+    function doneOrder()
+    {
+        // TODO done button clicked
+        
+        // TODO ajax call 
+        // TODO empty cart
+        // TODO return to the initial state
+    }
+
+
+
     function emptyCart()
     {
         clearCart();
         clearCustomer();
         clearDiscount();
         clearTax();
+        setTenderAmount(0);
+        disableDoneButton();
 
         $('#subtotal').attr('data-value', 0).text(0);
         $('#total').attr('data-value', 0).text(0);
@@ -508,7 +640,7 @@ $(document).ready(function () {
 
     function clearCart()
     {
-        $('.cart > tbody tr:not(:last)').fadeOut('fast', function () {$(this).remove();});
+        $('.cart > tbody tr:not(:last)').remove();
     }
 
     function saveOrder()
@@ -528,10 +660,34 @@ $(document).ready(function () {
 
     function cashOrder()
     {
-        // TODO hide cart panel
-        // TODO show receipt panel
+        hideSummary();
+        showTenderPanel();
+        
         // TODO ajax call to action controller
         
+        // TODO empty the cart
+        emptyCart();
+        
+    }
+
+    function hideSummary()
+    {
+        $('.subtotal, .discount, .tax, .more-buttons, .cash-buttons, .products').hide();
+    }
+
+    function showSummary()
+    {
+        $('.subtotal, .discount, .tax, .more-buttons, .cash-buttons, .products').show();
+    }
+
+    function showTenderPanel()
+    {
+        $('.tendered_panel_1, .tendered_panel_2, .tendered_panel_3, .tendered_panel_4, .done_button').show();
+    }
+
+    function hideTenderPanel()
+    {
+        $('.tendered_panel_1, .tendered_panel_2, .tendered_panel_3, .tendered_panel_4, .done_button').hide();
     }
 });
 

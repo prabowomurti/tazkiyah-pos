@@ -147,6 +147,19 @@
     text-align: center !important;
     cursor: pointer;
 }
+/* -=-=-=-=-=-= RECEIPT -=-=-=-=-=-=*/
+.receipt td{
+    font-size: 16px;
+    border-top: none !important;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.receipt hr {
+    margin: 0px;
+}
+.receipt td:last-child {
+    text-align: right;
+}
 
 /* -=-=-=-=-=-= SUMMARY -=-=-=-=-=-=*/
 .summary .customer {
@@ -174,13 +187,18 @@
     vertical-align: middle;
 }
 .summary .subtotal, 
-.summary .discount {
+.summary .discount,
+.tendered_panel_1,
+.tendered_panel_2{
     border-bottom: 1px dashed #F0F0F0;
 }
 
 .summary .subtotal, 
 .summary .discount,
-.summary .tax {
+.summary .tax, 
+.summary .tendered_panel_1,
+.summary .tendered_panel_2, 
+.summary .tendered_panel_3 {
     color: #FAFAFA;
     background-color: #73879C;
     font-size: 24px;
@@ -204,14 +222,42 @@
     color: #2A3F54;
 }
 
-.cash-buttons, .more-buttons {
+.cash-buttons, .more-buttons, .done_button {
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.tendered_panel_3 {
+    cursor: pointer;
+}
+
+.tendered_panel_4 {
+    margin: 0px;
+    color: #2A3F54;
+    border: 1px solid white;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+.tendered_panel_1 div,
+.tendered_panel_2 div
+{
+    text-align: center;
+    cursor: pointer;
     padding-left: 0px;
     padding-right: 0px;
 }
 .cash-buttons .cash,
 .cash-buttons .credit,
 .more-buttons .save-button,
-.more-buttons .more-button
+.more-buttons .more-button,
+.done_button .btn
  {
     margin: 0px;
     border-radius: 3px;
@@ -244,11 +290,13 @@
     text-align: center;
     font-weight: 300;
 }
-.cash-buttons .btn {
+.cash-buttons .btn,
+.done_button .btn {
     color: #F0F0F0;    
     background-color: #2A3F54;
 }
-.cash-buttons .btn:hover {
+.cash-buttons .btn:hover,
+.done_button .btn:hover {
     background-color: #73879C;
 }
 

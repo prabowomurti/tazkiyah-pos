@@ -51,6 +51,87 @@ use kartik\select2\Select2;
                 </table>
             </div>
             <!-- /.table-responsive -->
+            <div class="col-lg-8 col-lg-offset-2 receipt_panel" style="display:none">
+                <table class="table table-condensed receipt">
+                    <thead>
+                        <tr>
+                            <th class="text-center" colspan="3" style="font-size: 22px;padding: 12px 0px; background-color: #F9F9F9; color:#2A3F54;"><?= \common\models\Setting::t('app_name');?></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td colspan="2">Order #123</td>
+                            <td class="text-right">May 21 2017, 14:33</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Sale for Jimmy Heuren</td>
+                            <td class="text-right">Served by Natasha</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><hr /></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Nasi Goreng Seafood <br /> <small>Pedas</small></td>
+                            <td>36,000</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>&nbsp;&nbsp;&nbsp;<small><i>Discount</i></small></td>
+                            <td>-4,000</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Teh Tarik</td>
+                            <td>9,000</td>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Lemon Tea</td>
+                            <td>7,000</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><hr /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Subtotal</td>
+                            <td>52,000</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Discount</td>
+                            <td>-4,000</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Pajak</td>
+                            <td>4,800</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><strong>Total</strong></td>
+                            <td><strong>52,800</strong></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><hr /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Cash</td>
+                            <td>60,000</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Change</td>
+                            <td>7,200</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"><hr /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3" style="text-align:center;">Outlet Nirwana <br />Jalan Nirwana 21B Semarang <br />555-0919</td>
+                        </tr>
+                        <tr style="background-color: #DDD">
+                            <td colspan="3"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
         </div>
         <div class="col-xs-4 summary">
@@ -66,14 +147,31 @@ use kartik\select2\Select2;
             <div class="col-xs-12 subtotal">
                 Subtotal <span class="pull-right" id="subtotal" data-value="0">0</span>
             </div>
+            <div class="col-xs-12 tendered_panel_1" style="display:none">
+                <div class="col-xs-3 clear_tendered">Clear</div>
+                <div class="col-xs-3 tender_choice" data-value="1000">1,000</div>
+                <div class="col-xs-3 tender_choice" data-value="2000">2,000</div>
+                <div class="col-xs-3 tender_choice" data-value="5000">5,000</div>
+            </div>
+            <div class="col-xs-12 tendered_panel_2" style="display:none">
+                <div class="col-xs-4 tender_choice" data-value="10000">10,000</div>
+                <div class="col-xs-4 tender_choice" data-value="50000">50,000</div>
+                <div class="col-xs-4 tender_choice" data-value="100000">100,000</div>
+            </div>
             <div class="col-xs-12 discount">
                 Discount <span class="pull-right">- <span id="discount" data-value="0" data-type="by_value">0</span></span>
             </div>
             <div class="col-xs-12 tax">
                 Tax <span class="pull-right" id="tax" data-value="0">0</span>
             </div>
+            <div class="col-xs-12 tendered_panel_3" style="display:none">
+                Tendered <span class="pull-right tendered" data-value="0">0</span>
+            </div>
             <div class="col-xs-12 total" id="total" data-value="0">
                 0
+            </div>
+            <div class="col-xs-12 tendered_panel_4" style="display:none">
+                Change <span class="pull-right change">-----</span>
             </div>
             <div class="col-xs-12 more-buttons dropup">
                 <div class="col-xs-6 btn save-button">Save</div>
@@ -87,6 +185,9 @@ use kartik\select2\Select2;
             <div class="col-xs-12 cash-buttons">
                 <div class="col-xs-12 btn cash">Cash</div>
                 <!-- <div class="col-xs-12 btn cash">Credit</div> -->
+            </div>
+            <div class="col-xs-12 done_button" style="display:none">
+                <button class="col-xs-12 btn done" disabled="disabled">Done</button>
             </div>
         </div>
 
@@ -395,11 +496,27 @@ use kartik\select2\Select2;
     </div>
 </div>
 
-<div class="receipt_panel">
-    <div class="col-xs-12">
-        <div class="col-xs-8">
-            
+<div class="modal" id="edit_tendered_amount_modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title"><span></span>Tendered Amount</h4>
+            </div>
+
+            <form class="form form-horizontal" id="form_edit_tendered_amount">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <div class="col-xs-12">
+                            <input id="edit_tendered_amount_input" type="number" step=0.01 min=0 class="form-control" value="0"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-primary" value="Save"/>
+                </div>
+            </form>
         </div>
-        <div class="col-xs-4">
-        </div>
+    </div>
 </div>
