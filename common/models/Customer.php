@@ -103,7 +103,8 @@ class Customer extends \common\components\coremodels\ZeedActiveRecord
         $return = [];
         foreach ($customers as $customer)
         {
-            $return[$customer['id']] = $customer['username'] . ' (' . $customer['phone'] . ')';
+            $phone = (! empty($customer['phone']) ? ' (' . substr_replace($customer['phone'], 'XXXX', -4) . ')' : '');
+            $return[$customer['id']] = $customer['username'] . $phone;
         }
 
         return $return;

@@ -107,7 +107,8 @@ class OperatorController extends ZeedController
                 else 
                 {
                     $return['id'] = $model->id;
-                    $return['label'] = $model->username . ( ! empty($model->phone) ? ' (' . $model->phone . ')' : '');
+                    $phone = (! empty($model->phone) ? ' (' . substr_replace($model->phone, 'XXXX', -4) . ')' : '');
+                    $return['label'] = $model->username . $phone;
                     return json_encode($return);
                 }
             }
