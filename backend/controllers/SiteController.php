@@ -60,7 +60,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        if (Yii::$app->user->identity['role'] == User::ROLE_OPERATOR)
+        if (Yii::$app->user->identity['role'] == \common\models\User::ROLE_OPERATOR)
             return $this->redirect('/operator');
         
         return $this->render('index');
