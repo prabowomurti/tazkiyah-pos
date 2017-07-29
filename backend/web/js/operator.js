@@ -296,7 +296,7 @@ $(document).ready(function () {
         emptyCart();
 
         showCart();
-        showSummary();        
+        showSummary();
         disableDoneButton();
 
     });
