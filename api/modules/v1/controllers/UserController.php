@@ -24,7 +24,7 @@ class UserController extends ZeedActiveController
 
         $user = User::findOne(['email' => $params['email']]);
         if (empty($user))
-            static::missingParameter('Empty parameters : email and/or password');
+            static::missingParameter('Wrong email and/or password');
 
         if ( ! $user->validatePassword($params['password']))
             static::exception('Wrong credentials');
