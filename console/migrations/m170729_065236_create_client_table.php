@@ -14,7 +14,8 @@ class m170729_065236_create_client_table extends Migration
     {
         $this->createTable('client', [
             'id'           => $this->primaryKey(),
-            'clientname'   => $this->string(100)->notNull()->unique(),
+            'client_name'  => $this->string(100)->notNull()->unique(),
+            'api_key'      => $this->string(255)->notNull(),
             'label'        => $this->string(50)->notNull(),
             'db_name'      => $this->string(30)->notNull()->unique(),
             'db_username'  => $this->string(30)->notNull(),
