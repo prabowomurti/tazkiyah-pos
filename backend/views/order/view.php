@@ -8,7 +8,7 @@ use common\models\Order;
 /* @var $this yii\web\View */
 /* @var $model common\models\Order */
 
-$this->title = $model->customer->username . ' : #' . $model->id;
+$this->title = ($model->customer ? $model->customer->username : '') . ' : #' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => Yii::t('app', 'Orders'), 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

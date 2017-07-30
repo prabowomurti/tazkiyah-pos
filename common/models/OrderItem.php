@@ -125,7 +125,10 @@ class OrderItem extends \common\components\coremodels\ZeedActiveRecord
         }
 
         $order = Order::findOne($order_id);
+
         $order->total_price = $total_price + $order->tax - $order->discount;
+        if ($order->total_price < 0)
+            $order->total_price = 0;
         $order->save();
     }
 
