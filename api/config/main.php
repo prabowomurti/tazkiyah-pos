@@ -11,14 +11,21 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'api\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'v1' => [
+            'basePath' => '@app/modules/v1',
+            'class' => 'api\modules\v1\Module'
+        ]
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-api',
         ],
         'user' => [
-            'identityClass' => 'common\models\User',
-            'enableAutoLogin' => true,
+            // 'identityClass' => 'common\models\User',
+            'identityClass' => 'api\modules\v1\models\Client',
+            'enableAutoLogin' => false,
+            'loginUrl' => null,
             'identityCookie' => ['name' => '_identity-api', 'httpOnly' => true],
         ],
         'session' => [
@@ -35,16 +42,20 @@ return [
             ],
         ],
         'errorHandler' => [
-            'errorAction' => 'site/error',
+            // 'errorAction' => 'site/error',
         ],
-        /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
+            // 'enableStrictParsing' => true,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/user'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/client'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/product'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/customer'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'v1/order'],
             ],
         ],
-        */
     ],
     'params' => $params,
 ];
