@@ -221,6 +221,31 @@ class User extends ZeedActiveRecord implements IdentityInterface
     }
 
     /**
+     * Generate new token or get existing one
+     * @return string access_token
+     */
+    public function generate_access_token()
+    {
+        // return existing value
+        if ( ! empty($this->access_token))
+            return $this->access_token;
+
+        // or generate new one
+        $access_token = Yii::$app->security->generateRandomString();
+
+        while (static::findOne(['access_token' => $access_token]))
+        {
+            $access_token = Yii::$app->security->generateRandomString();
+        }
+        
+        // save new token
+        $this->access_token = $access_token;
+        $this->save();
+
+        return $access_token;
+    }
+
+    /**
      * Generates new password reset token
      */
     public function generatePasswordResetToken()
