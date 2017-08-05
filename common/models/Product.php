@@ -78,6 +78,15 @@ class Product extends \common\components\coremodels\ZeedActiveRecord
     }
 
     /**
+     * Check if product has attributes
+     * @return boolean
+     */
+    public function hasProductAttributes()
+    {
+        return (bool) $this->productAttributes;
+    }
+
+    /**
      * @inheritdoc
      * @return \common\models\activequery\ProductQuery the active query used by this AR class.
      */

@@ -8,6 +8,7 @@ use common\models\User;
 use common\models\Customer;
 use common\models\Order;
 use common\models\Product;
+use common\models\ProductAttribute;
 use common\models\OrderItem;
 use common\models\Outlet;
 
@@ -153,7 +154,6 @@ class OrderController extends ZeedActiveController
                 return static::exception('Product with ID : ' . $product_id . ' does not exist');
             }
             $order_item->product_id = $product->id;
-            $order_item->product_label = $product->label;
 
             if ( ! empty($product_attribute_ids[$key]))
             {
@@ -168,8 +168,17 @@ class OrderController extends ZeedActiveController
             }
             else 
             {
+                if ($product->hasProductAttributes())
+                {
+                    $order->delete();
+                    return static::exception($product->label . ' should have an attribute');
+                }
+
                 $order_item->product_attribute_id = null;
             }
+
+            // define product's label, if it has attributes, concat the attribute combination label
+            $order_item->product_label = $order_item->product_attribute_id ? $product->label . ' - ' . $product_attribute->getAttributeCombinationLabel() : $product->label;
 
             $order_item->quantity   = $product_quantities[$key];
             $order_item->discount   = $product_discounts[$key];
