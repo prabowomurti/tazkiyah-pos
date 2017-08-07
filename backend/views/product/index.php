@@ -32,6 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class'   => 'common\components\widgets\ZeedCheckboxColumn',
             ],
             'label',
+            'barcode',
             'description',
             'price',
             [

@@ -19,6 +19,8 @@ use yii\widgets\Pjax;
 
     <?= $form->field($model, 'label')->textInput(['maxlength' => true]) ?>
 
+    <?= $form->field($model, 'barcode')->textInput(['maxlength' => true]) ?>
+
     <?= $form->field($model, 'description')->textInput(['maxlength' => true]) ?>
 
     <?= $form->field($model, 'price')->textInput(['type' => 'number', 'step' => 0.01]) ?>

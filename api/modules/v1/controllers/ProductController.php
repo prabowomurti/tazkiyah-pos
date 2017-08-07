@@ -46,6 +46,7 @@ class ProductController extends ZeedActiveController
             $return[] = [
                 'id'          => $product->id,
                 'label'       => $product->label,
+                'barcode'     => $product->barcode,
                 'description' => $product->description,
                 'price'       => $product->price,
                 'position'    => $product->position,

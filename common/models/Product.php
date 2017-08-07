@@ -9,6 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property string $label
+ * @property string $barcode
  * @property string $description
  * @property integer $price
  * @property integer $visible
@@ -40,7 +41,7 @@ class Product extends \common\components\coremodels\ZeedActiveRecord
             [['position'], 'default', 'value' => 0],
             [['price'], 'number', 'min' => '0.00'],
             [['price'], 'filter', 'filter' => 'doubleval'],
-            [['label', 'description'], 'string', 'max' => 255],
+            [['label', 'barcode', 'description'], 'string', 'max' => 255],
         ];
     }
 
@@ -52,6 +53,7 @@ class Product extends \common\components\coremodels\ZeedActiveRecord
         return [
             'id' => Yii::t('app', 'ID'),
             'label' => Yii::t('app', 'Label'),
+            'barcode' => Yii::t('app', 'Barcode'),
             'description' => Yii::t('app', 'Description'),
             'price' => Yii::t('app', 'Price'),
             'visible' => Yii::t('app', 'Visible'),
