@@ -63,9 +63,19 @@ class CustomerController extends ZeedActiveController
         $customer->address = $address;
         $customer->gender = $params['gender'];
 
-        $customer->save();
+        if ( ! $customer->save())
+            static::exception('Can not save customer');
 
-        return static::successResponse('Customer saved');
-
+        return [
+            'status' => 200,
+            'message' => 'Customer saved', 
+            'customer' => [
+                'id'           => $customer->id,
+                'username'     => $customer->username,
+                'phone_number' => $customer->phone,
+                'address'      => $customer->address,
+                'gender'       => $customer->gender,
+            ]
+        ];
     }
 }

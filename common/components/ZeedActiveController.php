@@ -9,6 +9,11 @@ use yii\web\BadRequestHttpException;
 use api\modules\v1\models\Client;
 use common\models\User;
 
+/**
+ * Simple and sweet active controller for our beloved API
+ * 
+ * @author Prabowo Murti <prabowo.murti@gmail.com>
+ */
 class ZeedActiveController extends ActiveController
 {
     /**
