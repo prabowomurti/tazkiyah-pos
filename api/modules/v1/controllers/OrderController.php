@@ -125,7 +125,7 @@ class OrderController extends ZeedActiveController
                 $customer_id = $customer->id;
         }
 
-        $order_note = empty($params['order_note']) ? '' : $params['order_note'];
+        $order_note = empty($params['note']) ? '' : $params['note'];
         $order_discount = empty($params['discount']) ? 0.00 : (float) $params['discount'];
         $order_tax = empty($params['tax']) ? 0.00 : (float) $params['tax'];
 
@@ -183,7 +183,7 @@ class OrderController extends ZeedActiveController
             $order_item->quantity   = $product_quantities[$key];
             $order_item->discount   = $product_discounts[$key];
             $order_item->unit_price = $product->price + ($order_item->productAttribute ? $order_item->productAttribute->price : 0);
-            $order_item->note       = isset($product_notes[$key]) ? '' : $product_notes[$key];
+            $order_item->note       = isset($product_notes[$key]) ? $product_notes[$key] : '';
             $order_item->order_id   = $order->id;
 
             if ( ! $order_item->save())
@@ -194,7 +194,12 @@ class OrderController extends ZeedActiveController
 
         }
 
-        return ['status' => 200, 'message' => 'Order saved', 'order' => Order::findOne($order->id)];
+        return [
+            'status' => 200,
+            'message' => 'Order saved',
+            'order' => Order::findOne($order->id),
+            'items' => OrderItem::findAll(['order_id' => $order->id]),
+        ];
 
     }
 }
