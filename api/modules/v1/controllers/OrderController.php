@@ -77,9 +77,10 @@ class OrderController extends ZeedActiveController
         static::checkAccessToken();
 
         $params = \Yii::$app->request->post();
+
         if (empty($params['products']) || 
-            empty($params['product_attributes']) || 
             empty($params['product_quantities']) ||
+            (! isset($params['product_attributes'])) ||
             empty($params['outlet_id'])
             )
             static::missingParameter('Missing parameter : products, attributes, quantities, or outlet ID');
