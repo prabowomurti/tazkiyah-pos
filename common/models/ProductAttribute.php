@@ -148,6 +148,20 @@ class ProductAttribute extends \common\components\coremodels\ZeedActiveRecord
     }
 
     /**
+     * Get attribute combination IDs, separated by periods "."
+     * This will be used inside the API, to get the combination IDs of a product attribute.
+     * The combination ID is a unique index since it ordered by the ID.
+     * 
+     * @return string the attribute IDs concatenated by ',' 
+     */
+    public function getAttributeCombinationIDs()
+    {
+        $attribute_combination_ids = $this->getTheAttributes()->select('id')->orderBy('id')->column();
+
+        return implode(',', $attribute_combination_ids);
+    }
+
+    /**
      * @inheritdoc
      * @return \common\models\activequery\ProductAttributeQuery the active query used by this AR class.
      */

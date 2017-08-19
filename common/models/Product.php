@@ -113,4 +113,46 @@ class Product extends \common\components\coremodels\ZeedActiveRecord
         return $products;
 
     }
+
+    /**
+     * Get attribute groups as array
+     * @return [type] [description]
+     */
+    public function getAttributeGroups()
+    {
+        /**
+         * The raw SQL looks like this : 
+         * SELECT 
+                `parent`.`id` AS `parent_id`,
+                `parent`.`label` AS `parent_label`,
+                children.id AS children_id,
+                children.label AS children_label
+
+            FROM `attribute` AS children
+            INNER JOIN `attribute` `parent` ON parent.id = children.tree
+            INNER JOIN attribute_combination AS ac ON ac.`attribute_id` = children.id
+            INNER JOIN product_attribute AS pa ON pa.`id` = ac.`product_attribute_id`
+            WHERE product_id = {PRODUCT_ID}
+            GROUP BY `children`.`id`
+            ORDER BY parent.position, children.position;
+         */
+        $product_id = $this->id;
+        $query = self::find()->
+            select('
+                `parent`.`id` AS `parent_id`,
+                `parent`.`label` AS `parent_label`,
+                `child`.id AS `child_id`,
+                `child`.`label` AS `child_label`')->
+            from(Attribute::tableName() . ' AS child')->
+            innerJoin(Attribute::tableName() . ' AS parent', 'parent.id = child.tree')->
+            innerJoin('attribute_combination AS ac', 'ac.attribute_id = child.id')->
+            innerJoin(ProductAttribute::tableName() . ' AS pa', 'pa.id = ac.product_attribute_id')->
+            where(['pa.product_id' => $product_id])->
+            groupBy('child.id')->
+            orderBy('parent.position, child.position');
+
+        return $query->asArray()->all();
+
+
+    }
 }
