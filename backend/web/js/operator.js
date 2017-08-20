@@ -47,23 +47,70 @@ $(document).ready(function () {
 
         var cart_item = $(this).parent();
 
+        // check if the product has attributes
         if (cart_item.attr('data-product-attribute-id') > 0)
         {
+            // clear the previous data
+            $('.edit_item_model_attribute:not(:first)').remove();
+            $('.price_attribute_delimiter').show();
+
             var attributes = JSON.parse(cart_item.attr('data-product-attributes'));
+            // show all attribute groups
+            var attribute_groups = JSON.parse(cart_item.attr('data-product-attribute-groups'));
             var list = '';
-            // showing all product attributes from JSON data
-            for (var i = 0; i < attributes.length; i ++)
+
+            // pseudo-code : 
+            // 0. clear previous data 
+            // 1. clone div.edit_item_model_attribute
+            // 2. fill the label with parent_label
+            // 3. search the combination_ids from the `attributes`
+            // 4. save the value of combination_ids in parent:child format, so we can retrieve it later
+            // 5. win
+            
+            var cloned_divs = [];
+
+            for (var i = 0; i < attribute_groups.length; i++)
             {
-                list += '<option value=' + attributes[i].id + ' data-price=' + attributes[i].price +'>' + attributes[i].label + '</option>';
+                var parent = attribute_groups[i];
+                cloned_divs[i] = $('.edit_item_model_attribute:first');
+                cloned_divs[i].children('label').html(parent.parent_label);
+
+                // preparing the dropdownlist for children
+                var children = parent.children;
+                list = '';
+                for (var j = children.length - 1; j >= 0; j--)
+                {
+                    list = '<option value=' + children[j].id + '>' + children[j].child_label + '</option>' + list;
+                }
+                
+                cloned_divs[i]
+                    .find('.edit_item_modal_attributes')
+                    .attr('name', 'attributes_' + i)
+                    .attr('data-parent-id', parent.id)
+                    .html(list);
+
+                cloned_divs[i].clone(true).insertBefore('.price_attribute_delimiter').removeClass('hide');
             }
 
-            $('#edit_item_modal_attributes').html(list);
-            // set selected value based on previous product-attribute-id
-            $('#edit_item_modal_attributes').val(cart_item.attr('data-product-attribute-id'));
-            $('.edit_item_model_attribute').show();
+            // set selected value based on saved parent-child attribute IDs
+            if (cart_item.attr('data-product-attribute-id') > 0)
+            {
+                var parent_child_combination = JSON.parse(cart_item.attr('data-product-parent-child-combination-ids'));
+
+                for (var i = parent_child_combination.length - 1; i >= 0; i--) 
+                {
+                    $('.edit_item_modal_attributes[data-parent-id=' + parent_child_combination[i].parent_id + ']')
+                        .val(parent_child_combination[i].child_id);
+                }
+
+                var attribute_price = cart_item.attr('data-product-attribute-price');
+                $('#price_attribute_change').attr('data-value', attribute_price).val(formatCurrency(attribute_price));
+            }
+
         }
-        else {
-            $('.edit_item_model_attribute').hide();
+        else { // product with no attributes
+            $('.price_attribute_delimiter').hide();
+            $('.edit_item_model_attribute:not(:first)').remove();
         }
         
         $('#edit_item_modal_note').val(cart_item.attr('data-note'));
@@ -81,15 +128,32 @@ $(document).ready(function () {
         cart_item.attr('data-note', $('#edit_item_modal_note').val());
         
         // saving the attribute-id
-        if (cart_item.attr('data-product-attribute-id') > 0)
+        if (cart_item.attr('data-product-attribute-id') > 0) // special for product with attributes
         {
-            cart_item.attr('data-product-attribute-id', $('#edit_item_modal_attributes').val());
-            cart_item.attr('data-product-attribute-price', $('#edit_item_modal_attributes option:selected').attr('data-price'));
-            cart_item.find('small').text($('#edit_item_modal_attributes option:selected').text());
-        }
+            // searching the combination IDs
+            var tmp_ids = [];
+            var parent_child_combination = [];
 
-        // TODO ........
-        // check if the combination of attributes is already in the cart. Merge the quantity
+            // save parent-child-combination-ids
+            $('.edit_item_modal_attributes:not(:first)').each(function (index, element) {
+                tmp_ids[index] = $(element).val();
+                parent_child_combination[index] = {parent_id:$(element).attr('data-parent-id'),child_id:$(element).val()};
+            });
+
+            var product_attribute = searchAttributeCombinationIDs(tmp_ids, JSON.parse(cart_item.attr('data-product-attributes')));
+
+            if ( ! product_attribute) // combination not found
+            {
+                alert('Combination for the selected attributes can not be found. Please select other attribute');
+                return false;
+            }
+
+            cart_item.attr('data-product-attribute-id', product_attribute.id);
+            cart_item.attr('data-product-attribute-price', product_attribute.price);
+            cart_item.attr('data-product-parent-child-combination-ids', JSON.stringify(parent_child_combination));
+            cart_item.find('small').text(product_attribute.label);
+
+        }
 
         calculateSubTotal(cart_item);
 
@@ -97,6 +161,31 @@ $(document).ready(function () {
         return false;
     });
 
+    // --------- SHOW ADDITIONAL PRICE INFORMATION WHILE CHOOSING PRODUCT ATTRIBUTES -----------
+    $('select.edit_item_modal_attributes').on('change', function (){
+        var item_index = $('#form_edit_item_options .cart_item_index').val();
+        var cart_item = $('.cart tbody').find('.cart-item').eq(item_index);
+
+        var tmp_ids = [];
+
+        $('.edit_item_modal_attributes:not(:first)').each(function (index, element) {
+            tmp_ids[index] = $(element).val();
+        });
+
+        var product_attribute = searchAttributeCombinationIDs(tmp_ids, JSON.parse(cart_item.attr('data-product-attributes')));
+        var attribute_price;
+        if ( ! product_attribute) // combination not found
+        {
+            $('#price_attribute_change').attr('data-value', 0).val('Combination Not Found');
+            $('#form_edit_item_options input[type=submit]').attr('disabled', 'disabled');
+        }
+        else {
+            attribute_price = product_attribute.price;
+            $('#form_edit_item_options input[type=submit]').removeAttr('disabled');
+            $('#price_attribute_change').attr('data-value', attribute_price).val(formatCurrency(attribute_price));
+        }
+    });
+    
     // --------- REMOVE ITEM FROM CART -----------
     $('.remove_from_cart_btn').on('click', function () {
         var item_index = $('#form_edit_item_options .cart_item_index').val();
@@ -370,6 +459,27 @@ $(document).ready(function () {
 
         cart_item.clone(true).insertBefore('.row-add_product').hide().fadeIn(350);
         calculateTotal();
+    }
+
+    /**
+     * Search attribute combination IDs
+     * @param  {[object]} needle
+     * @param  {[object]} haystack [description]
+     * @return {[object]} or false if not found
+     */
+    function searchAttributeCombinationIDs(needle, haystack)
+    {
+        // sort numerically
+        needle = needle.sort(function (a,b) {return a-b;}).toString();
+        for (var i = haystack.length - 1; i >= 0; i--) 
+        {
+            if (haystack[i].combination_ids == needle)
+            {
+                return haystack[i];
+            }
+        }
+
+        return false;
     }
 
     function increaseQuantity(input_quantity)

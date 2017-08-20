@@ -212,10 +212,13 @@ use kartik\select2\Select2;
             $product_attribute_id = null;
             $product_price = $product->price;
             $product_label = $product->label;
+            $product_attribute_groups = '';
             $product_attributes = '';
 
             $attribute_price = 0;
             if ($product->productAttributes) :
+
+                $product_attribute_groups = json_encode($product->getAttributeGroups());
 
                 $first_attribute = $product->productAttributes{0};
                 $product_attribute_id = $first_attribute->id;
@@ -225,13 +228,17 @@ use kartik\select2\Select2;
                 $tmp = [];
                 foreach ($product->productAttributes as $attribute)
                 {
-                    $tmp[] = ['id' => $attribute->id, 'label' => $attribute->attributeCombinationLabel, 'price' => $attribute->price];
+                    $tmp[] = [
+                        'id' => $attribute->id,
+                        'combination_ids' => $attribute->attributeCombinationIDs,
+                        'label' => $attribute->attributeCombinationLabel,
+                        'price' => $attribute->price];
                 }
                 $product_attributes = json_encode($tmp);
             endif;
         ?>
         <tr class="cart-item" data-product-id="<?= $product->id?>" data-product-attribute-id="<?= $product_attribute_id;?>" 
-            data-product-attributes='<?= $product_attributes;?>' data-product-price="<?= $product_price;?>" 
+            data-product-attribute-groups='<?= $product_attribute_groups;?>' data-product-parent-child-combination-ids='[{}]' data-product-attributes='<?= $product_attributes;?>' data-product-price="<?= $product_price;?>" 
             data-product-attribute-price="<?= $attribute_price;?>" data-note="" data-quantity="1">
             <td class="cell-description"><?= $product_label;?></td>
             <td class="cell-quantity">
@@ -264,10 +271,18 @@ use kartik\select2\Select2;
             <form class="form form-horizontal" id="form_edit_item_options">
                 <input type="hidden" class="cart_item_index" value=""/>
                 <div class="modal-body">
-                    <div class="form-group edit_item_model_attribute">
-                        <label class="control-label col-xs-4 col-xs-4" for="edit_item_modal_attributes">Product Attribute</label>
+                    <div class="form-group edit_item_model_attribute hide">
+                        <label class="control-label col-xs-4 col-xs-4" for="edit_item_modal_attributes"></label>
                         <div class="col-xs-6 ">
-                            <select id="edit_item_modal_attributes" name="attributes" class="form-control"></select>
+                            <select class="form-control edit_item_modal_attributes" data-parent-id=""></select>
+                            <span id="edit_item_modal_attributes" data-value=""></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group price_attribute_delimiter">
+                        <label class="control-label col-xs-4" for="item_note">Additional Price</label>
+                        <div class="col-xs-6 ">
+                            <input class="form-control" id="price_attribute_change" data-value='0' value="0" disabled="disabled" />
                         </div>
                     </div>
                     <div class="form-group">
