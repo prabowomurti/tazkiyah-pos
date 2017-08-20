@@ -86,7 +86,7 @@ class Customer extends \common\components\coremodels\ZeedActiveRecord
     {
         $return = [static::GENDER_MALE => 'Male', static::GENDER_FEMALE => 'Female'];
 
-        return (empty($index) ? $return : $return[$index]);
+        return (( ! isset($index) || empty($index)) ? $return : $return[$index]);
     }
 
     /**
