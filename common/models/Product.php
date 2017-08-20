@@ -116,7 +116,7 @@ class Product extends \common\components\coremodels\ZeedActiveRecord
 
     /**
      * Get attribute groups as array
-     * @return [type] [description]
+     * @return array attribute groups
      */
     public function getAttributeGroups()
     {
@@ -151,7 +151,32 @@ class Product extends \common\components\coremodels\ZeedActiveRecord
             groupBy('child.id')->
             orderBy('parent.position, child.position');
 
-        return $query->asArray()->all();
+        $_attribute_groups = $query->asArray()->all();
+
+        // preparing the attribute groups
+        // the format looks like this https://gist.github.com/prabowomurti/e9dc67737a7844387095519ca1c076a4#file-gistfile1-json-L97-L134
+        $attribute_groups = [];
+        foreach ($_attribute_groups as $key => $group)
+        {
+            if ( ! isset($attribute_groups[$group['parent_id']]))
+            {
+                $attribute_groups[$group['parent_id']] = [
+                    'id' => $group['parent_id'],
+                    'parent_label' => $group['parent_label']
+                ];
+            }
+
+            $attribute_groups[$group['parent_id']]['children'][] = [
+                'id' => $group['child_id'],
+                'child_label' => $group['child_label']
+            ];
+
+        }
+
+        // remove the index
+        $attribute_groups = array_values($attribute_groups);
+
+        return $attribute_groups;
 
 
     }
