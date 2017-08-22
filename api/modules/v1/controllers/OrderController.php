@@ -10,6 +10,7 @@ use common\models\Order;
 use common\models\Product;
 use common\models\ProductAttribute;
 use common\models\OrderItem;
+use common\models\OrderLog;
 use common\models\Outlet;
 
 class OrderController extends ZeedActiveController
@@ -23,7 +24,12 @@ class OrderController extends ZeedActiveController
 
     public function verbs()
     {
-        return ['index' => ['POST'], 'create' => ['POST'], 'update' => ['POST', 'PUT']];
+        return [
+            'index' => ['POST'],
+            'create' => ['POST'],
+            'update' => ['POST', 'PUT'],
+            'retur' => ['POST']
+        ];
     }
 
     public function actionIndex()
@@ -202,5 +208,59 @@ class OrderController extends ZeedActiveController
             'items' => OrderItem::findAll(['order_id' => $order->id]),
         ];
 
+    }
+
+    /**
+     * Retur some items for a specific order
+     * @return mixed
+     */
+    public function actionRetur()
+    {
+        static::checkAccessToken();
+
+        $params = \Yii::$app->request->post();
+
+        $order_id = (int) $params['order_id'];
+
+        if (empty($order_id))
+            return static::missingParameter('Missing parameter : order ID');
+
+        if (($order = Order::findOne($order_id)) == null)
+            return static::exception('Order not found');
+
+        $items_string = $params['order_item'];
+        if (empty($items_string))
+            return static::exception('Missing parameter : order item');
+
+        $items = explode(',', $items_string);
+
+        foreach ($items as $key => $item_id) 
+        {
+            if (($order_item = OrderItem::findOne([
+                    'id' => $item_id,
+                    'order_id' => $order_id,
+                    'status' => OrderItem::STATUS_PAID])) == null)
+                return static::exception('Can not continue processing item ID : ' . $item_id);
+
+            // change the status or delete the item?
+            $order_item->status = OrderItem::STATUS_RETURNED;
+            if ( ! $order_item->save())
+                return static::exception('Can not continue processing item ID : ' . $item_id);
+        }
+
+        // create a log for the order
+        $order_log           = new OrderLog();
+        $order_log->order_id = $order->id;
+        $order_log->status   = $order->status;
+        $order_log->user_id  = 1; // admin
+        $order_log->note     = 'Items returned : ' . $items_string;
+        $order_log->save();
+
+        return [
+            'status'  => 200,
+            'message' => 'Return process is done',
+            'order'   => $order,
+            'items'   => OrderItem::findAll(['order_id' => $order->id]),
+        ];
     }
 }
