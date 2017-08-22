@@ -15,6 +15,7 @@ use Yii;
  * @property double $quantity
  * @property double $discount
  * @property double $unit_price
+ * @property string $status
  * @property string $note
  * @property integer $created_at
  * @property integer $updated_at
@@ -25,6 +26,8 @@ use Yii;
  */
 class OrderItem extends \common\components\coremodels\ZeedActiveRecord
 {
+    const STATUS_PAID     = 'paid';
+    const STATUS_RETURNED = 'returned';
     /**
      * @inheritdoc
      */
@@ -41,6 +44,8 @@ class OrderItem extends \common\components\coremodels\ZeedActiveRecord
         return [
             [['order_id', 'product_id', 'product_attribute_id', 'created_at', 'updated_at'], 'integer'],
             [['product_label', 'note'], 'string', 'max' => 255],
+            [['status'], 'string', 'max' => 50],
+            [['status'], 'default', 'value' => self::STATUS_PAID],
             [['quantity', 'unit_price', 'discount'], 'number'],
             [['order_id'], 'exist', 'skipOnError' => true, 'targetClass' => Order::className(), 'targetAttribute' => ['order_id' => 'id']],
             [['product_attribute_id'], 'exist', 'skipOnError' => true, 'targetClass' => ProductAttribute::className(), 'targetAttribute' => ['product_attribute_id' => 'id']],
@@ -62,6 +67,7 @@ class OrderItem extends \common\components\coremodels\ZeedActiveRecord
             'quantity'             => Yii::t('app', 'Quantity'),
             'discount'             => Yii::t('app', 'Discount'),
             'unit_price'           => Yii::t('app', 'Unit Price'),
+            'status'               => Yii::t('app', 'Status'),
             'note'                 => Yii::t('app', 'Note'),
             'created_at'           => Yii::t('app', 'Created At'),
             'updated_at'           => Yii::t('app', 'Updated At'),
@@ -115,7 +121,7 @@ class OrderItem extends \common\components\coremodels\ZeedActiveRecord
         $order_id = $this->order_id;
         $products = self::find()->
             select(['unit_price', 'quantity', 'discount'])->
-            where(['order_id' => $order_id])->
+            where(['order_id' => $order_id, 'status' => self::STATUS_PAID])->
             all();
 
         $total_price = 0;
