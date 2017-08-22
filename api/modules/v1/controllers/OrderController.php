@@ -220,7 +220,7 @@ class OrderController extends ZeedActiveController
 
         $params = \Yii::$app->request->post();
 
-        $order_id = (int) $params['order_id'];
+        $order_id = (int) \Yii::$app->request->post('order_id');
 
         if (empty($order_id))
             return static::missingParameter('Missing parameter : order ID');
