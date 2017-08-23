@@ -206,6 +206,10 @@
     padding-top: 8px;
     padding-bottom: 8px;
 }
+.summary .discount:hover,
+.summary .tax:hover {
+    background-color: #2A3F54;
+}
 .summary .discount,
 .summary .tax {
     cursor: pointer;
