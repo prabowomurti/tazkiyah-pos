@@ -39,9 +39,12 @@ class UserController extends ZeedActiveController
     {
         static::checkAccessToken();
 
+        $user = User::findOne(['access_token' => \Yii::$app->request->post('access_token')]);
+
         // delete access_token
         $user->access_token = null;
-        $user->save();
+        if ( ! $user->save())
+            return static::exception('Can not delete access token');
 
         return static::successResponse();
 
