@@ -101,7 +101,7 @@ class OrderController extends ZeedActiveController
             static::exception('Wrong count of parameters. Please make sure to match count of products, attributes, and quantities');
         }
 
-        if (isset($params['product_discounts']) && ! empty($params['product_discounts']))
+        if (isset($params['product_discounts']))
         {
             $product_discounts = explode(',', $params['product_discounts']);
             if (count($product_discounts) != count($product_ids))
