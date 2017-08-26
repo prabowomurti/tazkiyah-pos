@@ -82,6 +82,7 @@ use common\models\Customer;
                     'quantity',
                     'unit_price',
                     'discount',
+                    'status',
                     [
                         'label' => 'Sub Total',
                         'value' => function ($model) {

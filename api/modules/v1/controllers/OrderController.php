@@ -234,18 +234,46 @@ class OrderController extends ZeedActiveController
 
         $items = explode(',', $items_string);
 
+        if ( ! isset($params['returned_quantity']))
+            return static::exception('Missing parameter : product quantities');
+        $quantities_string = $params['returned_quantity'];
+
+        $product_quantities = explode(',', $quantities_string);
+        $product_quantities = array_values($product_quantities);
+        if (count($product_quantities) != count($items))
+            return static::exception('Wrong count of items and quantities');
+
         foreach ($items as $key => $item_id) 
         {
+            if (empty($product_quantities[$key]))
+                continue;// why 0 or empty??
+
             if (($order_item = OrderItem::findOne([
                     'id' => $item_id,
                     'order_id' => $order_id,
                     'status' => OrderItem::STATUS_PAID])) == null)
                 return static::exception('Can not continue processing item ID : ' . $item_id);
 
-            // change the status or delete the item?
-            $order_item->status = OrderItem::STATUS_RETURNED;
+            if ($product_quantities[$key] > $order_item->quantity)
+                return static::exception('Returned quantity for item ID : ' . $item_id . ' is more than the quantity paid');
+
+            $order_item->quantity = $order_item->quantity - $product_quantities[$key];
             if ( ! $order_item->save())
-                return static::exception('Can not continue processing item ID : ' . $item_id);
+                return static::exception('Can not save existing order item with ID : ' . $item_id);
+
+            $returned_item = new OrderItem();
+            $returned_item->order_id             = $order->id;
+            $returned_item->product_id           = $order_item->product_id;
+            $returned_item->product_label        = $order_item->product_label;
+            $returned_item->product_attribute_id = $order_item->product_attribute_id;
+            $returned_item->quantity             = $product_quantities[$key];
+            $returned_item->discount             = $order_item->discount;
+            $returned_item->unit_price           = $order_item->unit_price;
+            $returned_item->status               = OrderItem::STATUS_RETURNED;
+
+            if ( ! $returned_item->save())
+                return static::exception('Can not save the returned item for item ID : ' . $item_id);
+
         }
 
         // create a log for the order
@@ -253,7 +281,7 @@ class OrderController extends ZeedActiveController
         $order_log->order_id = $order->id;
         $order_log->status   = $order->status;
         $order_log->user_id  = 1; // admin
-        $order_log->note     = 'Items returned : ' . $items_string;
+        $order_log->note     = 'Items returned : ' . $items_string . ', quantity : ' . $quantities_string;
         $order_log->save();
 
         return [
