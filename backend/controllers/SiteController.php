@@ -102,4 +102,20 @@ class SiteController extends Controller
 
         return $this->goHome();
     }
+
+    public function beforeAction($action)
+    {
+        if (parent::beforeAction($action))
+        {
+            if ($action->id == 'error')
+            {
+                $this->layout = '@backend/views/layouts/error';
+            }
+
+            return true;
+        }
+        else 
+            return false;
+
+    }
 }
