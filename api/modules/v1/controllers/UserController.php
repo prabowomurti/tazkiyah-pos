@@ -5,6 +5,7 @@ namespace api\modules\v1\controllers;
 use common\components\ZeedActiveController;
 
 use common\models\User;
+use common\models\Employee;
 
 class UserController extends ZeedActiveController
 {
@@ -29,10 +30,19 @@ class UserController extends ZeedActiveController
         if ( ! $user->validatePassword($params['password']))
             static::exception('Wrong credentials');
 
-        if ( ! $user->status == User::STATUS_ACTIVE)
+        if ($user->status != User::STATUS_ACTIVE)
             static::exception('User is not active');
 
-        return ['user_name' => $user->username, 'access_token' => $user->generate_access_token()];
+        if ($user->role != User::ROLE_OPERATOR)
+            static::exception('User role should be OPERATOR');
+
+        $employee = Employee::findOne(['user_id' => $user->id]);
+
+        return [
+            'user_name' => $user->username,
+            'access_token' => $user->generate_access_token(),
+            'outlet' => ($employee ? $employee->outlet : null),
+        ];
     }
 
     public function actionLogout()
