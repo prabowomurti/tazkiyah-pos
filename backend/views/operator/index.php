@@ -30,9 +30,9 @@ use kartik\select2\Select2;
 
     <!-- .products -->
 
-    <div class="col-xs-12">
+    <div class="col-xs-12" >
         <div class="col-xs-8">
-            <div class="table-responsive">
+            <div class="table-responsive div-cart">
                 <table class="table table-hovered cart">
                     <thead>
                         <tr>
@@ -59,25 +59,24 @@ use kartik\select2\Select2;
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td colspan="2">Order #123</td>
-                            <td class="text-right">May 21 2017, 14:33</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2">Sale for Jimmy Heuren</td>
-                            <td class="text-right">Served by Natasha</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><hr /></td>
+                        <tr class="condensed">
+                            <td colspan="2">
+                                Order #<span class="receipt_number"></span><br />
+                                <span class="receipt_current_time" id="receipt_current_time"></span>
+                            </td>
+                            <td class="text-right">
+                                <span class="receipt_customer"></span><br />
+                                Served by <span class="receipt_operator"></span>
+                            </td>
                         </tr>
                         <tr>
                             <td>2</td>
-                            <td>Nasi Goreng Seafood <br /> <small>Pedas</small></td>
+                            <td>Nasi Goreng Seafood <br /><small>Pedas</small></td>
                             <td>36,000</td>
                         </tr>
-                        <tr>
+                        <tr class="discount_row condensed">
                             <td></td>
-                            <td>&nbsp;&nbsp;&nbsp;<small><i>Discount</i></small></td>
+                            <td>&nbsp;&nbsp;<small><i>Discount</i></small></td>
                             <td>-4,000</td>
                         </tr>
                         <tr>
@@ -106,6 +105,9 @@ use kartik\select2\Select2;
                             <td>4,800</td>
                         </tr>
                         <tr>
+                            <td colspan="3"><hr /></td>
+                        </tr>
+                        <tr>
                             <td colspan="2"><strong>Total</strong></td>
                             <td><strong>52,800</strong></td>
                         </tr>
@@ -119,9 +121,6 @@ use kartik\select2\Select2;
                         <tr>
                             <td colspan="2">Change</td>
                             <td>7,200</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><hr /></td>
                         </tr>
                         <tr>
                             <td colspan="3" style="text-align:center;">Outlet Nirwana <br />Jalan Nirwana 21B Semarang <br />555-0919</td>

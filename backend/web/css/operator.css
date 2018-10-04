@@ -52,10 +52,29 @@
 }
 
 /* -=-=-=-=-=-= CART -=-=-=-=-=-=*/
-/*.cart {
-    overflow-y: scroll;
-    max-height: 400px;   
-}*/
+/* temporary hack */
+/*
+
+.table-fixed thead {
+  width: 97%;
+}
+.table-fixed tbody {
+  height: 230px;
+  overflow-y: auto;
+  width: 100%;
+}
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed td, .table-fixed th {
+  display: block;
+}
+.table-fixed tbody td, .table-fixed thead > tr> th {
+  float: left;
+  border-bottom-width: 0;
+}
+*/
+
+.div-cart {
+    overflow-y: auto;
+}
 .cart th {
     text-align: center;
     min-width: 0;
@@ -148,17 +167,23 @@
     cursor: pointer;
 }
 /* -=-=-=-=-=-= RECEIPT -=-=-=-=-=-=*/
-.receipt td{
+.receipt td:not(.condensed){
     font-size: 16px;
     border-top: none !important;
-    padding-top: 0px;
-    padding-bottom: 0px;
 }
 .receipt hr {
     margin: 0px;
 }
 .receipt td:last-child {
     text-align: right;
+}
+.receipt tr.condensed td{
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-size: 11px;
+}
+.receipt tr.condensed td > span {
+    line-height: inherit;
 }
 
 /* -=-=-=-=-=-= SUMMARY -=-=-=-=-=-=*/

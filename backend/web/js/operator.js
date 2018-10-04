@@ -1,4 +1,7 @@
 $(document).ready(function () {
+    // ---------------- FIX tbody width ----------------
+    //$('.cart tbody').css('width', $('.cart').css('width') + 'px');
+    $('.div-cart').css('max-height', '500px');
 
     // --------------- FIX NAV-TABS ---------------
     $('.nav-tabs > .operator-menu').on('click', function() {
@@ -807,7 +810,12 @@ function startTime(){
     var m = today.getMinutes();
     h = h < 10 ? '0' + h : h;
     m = m < 10 ? '0' + m : m;
-    document.getElementById('current_time').innerHTML = h + ':' + m;
+    var current_time = h + ':' + m;
+    document.getElementById('current_time').innerHTML = current_time;
+
+    var current_date = new Date().toISOString().slice(0, 10);
+
+    document.getElementById('receipt_current_time').innerHTML = [current_date, current_time].join(' ');
 
     t = setTimeout(function () {startTime();}, 1000);
 }
