@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'outlet_id',
                 'filter' => \common\models\Outlet::getAllAslist(),
                 'label' => 'Outlet',
-                'value' => function ($model) {return $model->outlet->label;}
+                'value' => function ($model) {return @$model->outlet->label;}
             ],
             // 'total_price',
             [
