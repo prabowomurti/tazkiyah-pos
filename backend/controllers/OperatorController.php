@@ -175,7 +175,7 @@ class OperatorController extends ZeedController
                 throw new NotFoundHttpException('Can not save order item : ' . $order_item->product_label);
         }
 
-        return '1';
+        return $order->id;
 
     }
 }

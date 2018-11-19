@@ -52,75 +52,47 @@ use kartik\select2\Select2;
             </div>
             <!-- /.table-responsive -->
             <div class="col-lg-8 col-lg-offset-2 receipt_panel" style="display:none">
-                <table class="table table-condensed receipt">
+                <table class="table table-condensed receipt" id="receipt">
                     <thead>
                         <tr>
                             <th class="text-center" colspan="3" style="font-size: 22px;padding: 12px 0px; background-color: #F9F9F9; color:#2A3F54;"><?= \common\models\Setting::t('app_name');?></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="condensed">
+                        <tr class="subheader">
                             <td colspan="2">
                                 Order #<span class="receipt_number"></span><br />
                                 <span class="receipt_current_time" id="receipt_current_time"></span>
                             </td>
                             <td class="text-right">
-                                <span class="receipt_customer"></span><br />
-                                Served by <span class="receipt_operator"></span>
+                                Served by <span class="receipt_operator"><?= Yii::$app->user->identity['username']?></span><br />
+                                <span class="receipt_customer"></span>
                             </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Nasi Goreng Seafood <br /><small>Pedas</small></td>
-                            <td>36,000</td>
-                        </tr>
-                        <tr class="discount_row condensed">
-                            <td></td>
-                            <td>&nbsp;&nbsp;<small><i>Discount</i></small></td>
-                            <td>-4,000</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Teh Tarik</td>
-                            <td>9,000</td>
-                        </tr>
-                        <tr>
-                            <td>1</td>
-                            <td>Lemon Tea</td>
-                            <td>7,000</td>
                         </tr>
                         <tr>
                             <td colspan="3"><hr /></td>
                         </tr>
                         <tr>
                             <td colspan="2">Subtotal</td>
-                            <td>52,000</td>
+                            <td class="receipt_subtotal"></td>
                         </tr>
                         <tr>
                             <td colspan="2">Discount</td>
-                            <td>-4,000</td>
+                            <td class="receipt_discount"></td>
                         </tr>
                         <tr>
-                            <td colspan="2">Pajak</td>
-                            <td>4,800</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3"><hr /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Total</strong></td>
-                            <td><strong>52,800</strong></td>
+                            <td colspan="2">Tax</td>
+                            <td class="receipt_tax"></td>
                         </tr>
                         <tr>
                             <td colspan="3"><hr /></td>
                         </tr>
                         <tr>
-                            <td colspan="2">Cash</td>
-                            <td>60,000</td>
+                            <td colspan="2"><strong>T O T A L</strong></td>
+                            <td><strong class="receipt_total"></strong></td>
                         </tr>
                         <tr>
-                            <td colspan="2">Change</td>
-                            <td>7,200</td>
+                            <td colspan="3"><hr /></td>
                         </tr>
                         <tr>
                             <td colspan="3" style="text-align:center;">Outlet Nirwana <br />Jalan Nirwana 21B Semarang <br />555-0919</td>
@@ -186,6 +158,7 @@ use kartik\select2\Select2;
                 <!-- <div class="col-xs-12 btn cash">Credit</div> -->
             </div>
             <div class="col-xs-12 done_button" style="display:none">
+                <button class="col-xs-12 btn print" disabled="disabled">Print Receipt</button>
                 <button class="col-xs-12 btn done" disabled="disabled">Done</button>
             </div>
         </div>
@@ -517,6 +490,7 @@ use kartik\select2\Select2;
     </div>
 </div>
 
+<!-- Edit Tendered Amount Modal -->
 <div class="modal" id="edit_tendered_amount_modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">

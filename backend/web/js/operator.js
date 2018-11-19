@@ -1,4 +1,7 @@
 $(document).ready(function () {
+
+    var order_id = 0;
+
     // ---------------- FIX tbody width ----------------
     //$('.cart tbody').css('width', $('.cart').css('width') + 'px');
     $('.div-cart').css('max-height', '500px');
@@ -377,6 +380,7 @@ $(document).ready(function () {
     // ------------  EDIT TENDERED AMOUNT MODAL --------------
     $('.tendered_panel_3').click(function () {
         $('#edit_tendered_amount_modal').modal();
+        $('#edit_tendered_amount_input').focus().select();
     });
     
     $('#form_edit_tendered_amount').submit(function () {
@@ -386,16 +390,14 @@ $(document).ready(function () {
         return false;
     });
 
+    // ------------  PRINT BUTTON --------------
+    $('.print').on('click', function () {
+        printReceipt();
+    });
+
     // ------------  DONE BUTTON --------------
-    $('.done').click(function () {
-        hideReceiptPanel();
-        hideTenderPanel();
-
-        emptyCart();
-
-        showCart();
-        showSummary();
-        disableDoneButton();
+    $('.done').on('click', function () {
+        doneOrder();
 
     });
 
@@ -438,10 +440,8 @@ $(document).ready(function () {
             return false;
         }
 
-        hideSummary();
-        hideCart();
-        showReceiptPanel();
-        showTenderPanel();
+        cashOrder();
+
     });
 
     function isCartEmpty()
@@ -697,12 +697,12 @@ $(document).ready(function () {
         if (change > 0)
         {
             setChange(1); // the tendered is less than the total
-            disableDoneButton();
+            disablePrintButton();
         }
         else
         {
             setChange(change);
-            enableDoneButton();
+            enablePrintButton();
         }
     }
 
@@ -715,14 +715,24 @@ $(document).ready(function () {
         $('.change').attr('data-value', change).text(formatCurrency(change));
     }
 
+    function enablePrintButton()
+    {
+        $('.print').removeAttr('disabled');
+    }
+
     function enableDoneButton()
     {
-        $('.done').removeAttr('disabled');
+        $('.done').show().removeAttr('disabled');
     }
 
     function disableDoneButton()
     {
-        $('.done').attr('disabled', 'disabled');
+        $('.done').hide().attr('disabled', 'disabled');
+    }
+
+    function disablePrintButton()
+    {
+        $('.print').attr('disabled', 'disabled');
     }
 
     function hideCart()
@@ -742,19 +752,69 @@ $(document).ready(function () {
 
     function showReceiptPanel()
     {
+        if ($('#customer_id').val() > 0)
+        {
+            $('.receipt_customer').text($('#customer_id option:selected').text());
+        }
+        $('.receipt_number').text(order_id);
+
+        // render the items
+        var item_rows = '';
+        $('.cart .cart-item').each(function (index, item) {
+
+            item_row = '<tr class="receipt_item_row">' + '<td>' + $(item).attr('data-quantity') +'</td>' ;
+            item_row += '<td>' + $(item).find('.cell-description').html() + '</td>';
+            item_row += '<td>' + formatCurrency($(item).attr('data-product-price') * $(item).attr('data-quantity')) + '</td>';
+            item_row += '</tr>';
+
+            var item_discount = $(item).attr('data-discount');
+
+            if (item_discount > 0)
+            {
+                item_row += '<tr><td></td><td>&nbsp;<i>Discount</i></td>';
+                item_row += '<td>-' + formatCurrency(item_discount) + '</td></tr>';
+            }
+
+            item_rows += item_row;
+        });
+
+        $('.subheader').after(item_rows);
+
+        $('.receipt_subtotal').text($('#subtotal').text());
+        $('.receipt_discount').text('-' + $('#discount').text());
+        $('.receipt_tax').text($('#tax').text());
+        $('.receipt_total').text($('#total').text());
+
         $('.receipt_panel').show();
     }
 
     function doneOrder()
     {
-        // TODO done button clicked
-        
-        // TODO ajax call 
-        // TODO empty cart
-        // TODO return to the initial state
+        console.log('doneOrder()');
+
+        hideReceiptPanel();
+        hideTenderPanel();
+
+        emptyCart();
+        showCart();
+        showSummary();
+        disableDoneButton();
+        disablePrintButton();
     }
 
+    function clearReceipt()
+    {
+        $('.receipt_item_row').remove();
+    }
 
+    function printReceipt()
+    {
+        $('#receipt').printThis({
+            // printDelay : 500
+        });
+
+        enableDoneButton();
+    }
 
     function emptyCart()
     {
@@ -763,7 +823,6 @@ $(document).ready(function () {
         clearDiscount();
         clearTax();
         setTenderAmount(0);
-        disableDoneButton();
 
         $('#subtotal').attr('data-value', 0).text(0);
         $('#total').attr('data-value', 0).text(0);
@@ -792,6 +851,10 @@ $(document).ready(function () {
     function cashOrder()
     {
         console.log('cashOrder()');
+
+        // we clear the receipt here, since the printThis() function needs time to load the content
+        clearReceipt();
+        disableDoneButton();
 
         var order = {
             tax      : 0.00,
@@ -837,6 +900,10 @@ $(document).ready(function () {
             type : "POST",
             data : {Order: order, Items: items}
         }).done(function (data){
+
+            // saving the order number
+            order_id = data;
+
             hideSummary();
             hideCart();
             showReceiptPanel();

@@ -28,6 +28,7 @@ $bundle = common\components\assets\Asset::register($this);
     <![endif]-->
     <link href="/css/operator.css" rel="stylesheet">
     <?= $this->registerJsFile('@web/js/operator.js', ['depends' => [\yii\web\JqueryAsset::className()]]); ?>
+    <?= $this->registerJsFile('@web/js/printThis.js', ['depends' => [\yii\web\JqueryAsset::className()]]); ?>
 </head>
 <body>
 <?php $this->beginBody(); ?>

@@ -167,23 +167,42 @@
     cursor: pointer;
 }
 /* -=-=-=-=-=-= RECEIPT -=-=-=-=-=-=*/
-.receipt td:not(.condensed){
-    font-size: 16px;
-    border-top: none !important;
+.receipt tbody {
+    font-family: "Courier New";
+    color: #111;
 }
+
+.receipt tr.subheader {
+    border-bottom: 1px solid #ccc;
+}
+
+.receipt tr.subheader td{
+    padding-top: 0px;
+    padding-bottom: 0px;
+    font-size: 9px;
+}
+
+.receipt tr td small {
+    font-size: 10px;
+    color: #666;
+}
+
+.receipt tr td > span {
+    line-height: inherit;
+}
+
+.receipt td:not(.condensed) { /* small hack to overwrite bootstrap style */
+    font-size: 14px;
+    border-top: none !important;
+    padding-bottom : 0px;
+    padding-top: 1px;
+}
+
 .receipt hr {
     margin: 0px;
 }
 .receipt td:last-child {
     text-align: right;
-}
-.receipt tr.condensed td{
-    padding-top: 0px;
-    padding-bottom: 0px;
-    font-size: 11px;
-}
-.receipt tr.condensed td > span {
-    line-height: inherit;
 }
 
 /* -=-=-=-=-=-= SUMMARY -=-=-=-=-=-=*/
@@ -322,11 +341,14 @@
 .cash-buttons .btn,
 .done_button .btn {
     color: #F0F0F0;    
-    background-color: #2A3F54;
+    background-color: #2A3F54;    
 }
 .cash-buttons .btn:hover,
 .done_button .btn:hover {
     background-color: #73879C;
+}
+.done {
+    height: 64px;
 }
 
 /* -=-=-=-=-=-= PRODUCTS -=-=-=-=-=-=*/
