@@ -5,6 +5,7 @@ namespace backend\controllers;
 use Yii;
 use common\models\User;
 use common\models\Product;
+use common\models\ProductAttribute;
 use common\models\Order;
 
 use common\models\OrderItem;
@@ -98,7 +99,9 @@ class OrderItemController extends ZeedController
             $model->discount             = (double) $post['discount'];
             $model->note                 = $post['note'];
             $product                     = Product::findOne($model->product_id);
-            $model->product_label        = $product->label;
+            // $model->product_label        = $product->label;
+            // cache the product label. If it has an attribute, also concat it with the combination label (Roti Maryam - (Reguler, Isi Daging Sapi))
+            $model->product_label        = $product->label . ($model->product_attribute_id ? ' - ' . ProductAttribute::findOne($model->product_attribute_id)->getAttributeCombinationLabel() : '');
             $model->unit_price           = $product->price + ($model->productAttribute ? $model->productAttribute->price : 0);
 
             if ($model->save())
