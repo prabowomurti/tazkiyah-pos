@@ -22,6 +22,8 @@ use Yii;
  */
 class Product extends \common\components\coremodels\ZeedActiveRecord
 {
+
+    const MAX_PRODUCTS_SHOWN = 12;
     /**
      * @inheritdoc
      */

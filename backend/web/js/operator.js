@@ -241,6 +241,7 @@ $(document).ready(function () {
     // --------- SHOW ADD CUSTOMER MODAL -----------
     $('.summary .add_customer').on('click', function () {
         $('#add_customer_modal').modal();
+        $('#customer_name').focus();
     });
 
     // --------- ADD CUSTOMER DETAIL -----------
@@ -414,11 +415,16 @@ $(document).ready(function () {
 
     // ------------  EDIT ORDER NOTE --------------
     $('.edit_order_note_button').click(function (e) {
+        editOrderNote(e);
+    });
+
+    function editOrderNote(e)
+    {
         e.preventDefault();
         $('#edit_order_note_modal').modal();
         $('#order_note').focus();
+    }
 
-    });
     $('#form_edit_order_note').submit(function () {
         $('#edit_order_note_modal').modal('hide');
         return false;
@@ -785,13 +791,59 @@ $(document).ready(function () {
 
     function cashOrder()
     {
-        hideSummary();
-        showTenderPanel();
-        
-        // TODO ajax call to action controller
-        
-        // TODO empty the cart
-        emptyCart();
+        console.log('cashOrder()');
+
+        var order = {
+            tax      : 0.00,
+            discount : 0.00,
+            note     : '',
+            customer_id : null
+        };
+
+        order.tax = getDataValue('#tax');
+        order.discount = getDataValue('#discount');
+        order.note = $('#order_note').val();
+
+        if ($('#customer_id').val().length > 0)
+        {
+            order.customer_id = $('#customer_id').val();
+        }
+
+        // grouping order items
+        var items = [];
+
+        $('.cart .cart-item').each(function (index, item) {
+            
+            var post_item = {
+                id : 0,
+                product_attribute_id : 0,
+                quantity : 0,
+                discount : 0.00,
+                note : ""
+            };
+
+            post_item.id                   = $(item).data('product-id');
+            post_item.product_attribute_id = parseInt($(item).data('product-attribute-id'), 10) || 0;
+            post_item.quantity             = $(item).attr('data-quantity');
+            post_item.discount             = $(item).attr('data-discount');
+            post_item.note                 = $(item).attr('data-note');
+
+            items[index] = post_item;
+
+        });
+
+        $.ajax({
+            url : $('.cash').attr('data-url'),
+            type : "POST",
+            data : {Order: order, Items: items}
+        }).done(function (data){
+            hideSummary();
+            hideCart();
+            showReceiptPanel();
+            showTenderPanel();
+        }).fail(function (jqXHR){
+            alert('Can not save order : ' + jqXHR.responseText);
+        });
         
     }
 

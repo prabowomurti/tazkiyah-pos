@@ -162,6 +162,17 @@ class ProductAttribute extends \common\components\coremodels\ZeedActiveRecord
     }
 
     /**
+     * Check if combination of product_id and attribute ID exists
+     * @param  integer $product_id           [description]
+     * @param  integer $product_attribute_id [description]
+     * @return boolean                       [description]
+     */
+    public static function isValidAttributeID($product_id = 0, $product_attribute_id = 0)
+    {
+        return (bool) self::findOne(['id' => $product_attribute_id, 'product_id' => $product_id]);
+    }
+
+    /**
      * @inheritdoc
      * @return \common\models\activequery\ProductAttributeQuery the active query used by this AR class.
      */

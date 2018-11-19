@@ -182,7 +182,7 @@ use kartik\select2\Select2;
                 </ul>
             </div>
             <div class="col-xs-12 cash-buttons">
-                <div class="col-xs-12 btn cash">Cash</div>
+                <div class="col-xs-12 btn cash" data-url="/operator/add-order">Cash</div>
                 <!-- <div class="col-xs-12 btn cash">Credit</div> -->
             </div>
             <div class="col-xs-12 done_button" style="display:none">
