@@ -42,7 +42,10 @@ $(document).ready(function () {
 
     // --------- RECALCULATE SUBTOTAL WHEN DISCOUNT IS CHANGED -----------
     $('.cart').on('change keyup paste propertychange', '.cell-discount-input', function () {
-        calculateSubTotal($(this).parent().parent());
+        // also change the DISCOUNT ITEM value
+        var cart_item = $(this).parent().parent();
+        cart_item.attr('data-discount', $(this).val());
+        calculateSubTotal(cart_item);
     });
 
     // ------------  EDIT PRODUCT ON CART --------------
@@ -100,10 +103,10 @@ $(document).ready(function () {
             {
                 var parent_child_combination = JSON.parse(cart_item.attr('data-product-parent-child-combination-ids'));
 
-                for (var i = parent_child_combination.length - 1; i >= 0; i--) 
+                for (var k = parent_child_combination.length - 1; k >= 0; k--)
                 {
-                    $('.edit_item_modal_attributes[data-parent-id=' + parent_child_combination[i].parent_id + ']')
-                        .val(parent_child_combination[i].child_id);
+                    $('.edit_item_modal_attributes[data-parent-id=' + parent_child_combination[k].parent_id + ']')
+                        .val(parent_child_combination[k].child_id);
                 }
 
                 var attribute_price = cart_item.attr('data-product-attribute-price');
@@ -277,6 +280,7 @@ $(document).ready(function () {
     // --------- SHOW EDIT DISCOUNT MODAL -----------
     $('.summary .discount').on('click', function () {
         $('#edit_discount_modal').modal();
+        $('#edit_discount_input').focus();
     });
 
     // ----------- DETERMINE DISCOUNT TYPE ------------
@@ -319,6 +323,7 @@ $(document).ready(function () {
     // --------- SHOW EDIT TAX MODAL -----------
     $('.summary .tax').on('click', function () {
         $('#edit_tax_modal').modal();
+        $('#edit_tax_input').focus();
     });
 
     // ----------- DETERMINE TAX TYPE ------------
@@ -411,6 +416,7 @@ $(document).ready(function () {
     $('.edit_order_note_button').click(function (e) {
         e.preventDefault();
         $('#edit_order_note_modal').modal();
+        $('#order_note').focus();
 
     });
     $('#form_edit_order_note').submit(function () {
@@ -420,8 +426,7 @@ $(document).ready(function () {
 
     // ------------  CASH ORDER AND PRINT RECEIPT --------------
     $('.cash').click(function () {
-        var total = $('.total').attr('data-value');
-        if (total <= 0)
+        if (isCartEmpty())
         {
             alert('Cart is empty');
             return false;
@@ -432,6 +437,13 @@ $(document).ready(function () {
         showReceiptPanel();
         showTenderPanel();
     });
+
+    function isCartEmpty()
+    {
+        var count_product = $('.cart > tbody tr').length - 1;
+
+        return (count_product === 0);
+    }
 
     function addProductToCart(cart_item)
     {
@@ -474,7 +486,7 @@ $(document).ready(function () {
     {
         // sort numerically
         needle = needle.sort(function (a,b) {return a-b;}).toString();
-        for (var i = haystack.length - 1; i >= 0; i--) 
+        for (var i = haystack.length - 1; i >= 0; i--)
         {
             if (haystack[i].combination_ids == needle)
             {
@@ -801,6 +813,11 @@ $(document).ready(function () {
     function hideTenderPanel()
     {
         $('.tendered_panel_1, .tendered_panel_2, .tendered_panel_3, .tendered_panel_4, .done_button').hide();
+    }
+
+    function getDataValue(element)
+    {
+        return parseInt($(element).attr('data-value'), 10) || 0;
     }
 });
 

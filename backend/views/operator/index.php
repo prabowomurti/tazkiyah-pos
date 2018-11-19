@@ -236,9 +236,16 @@ use kartik\select2\Select2;
                 $product_attributes = json_encode($tmp);
             endif;
         ?>
-        <tr class="cart-item" data-product-id="<?= $product->id?>" data-product-attribute-id="<?= $product_attribute_id;?>" 
-            data-product-attribute-groups='<?= $product_attribute_groups;?>' data-product-parent-child-combination-ids='[{}]' data-product-attributes='<?= $product_attributes;?>' data-product-price="<?= $product_price;?>" 
-            data-product-attribute-price="<?= $attribute_price;?>" data-note="" data-quantity="1">
+        <tr class="cart-item" data-product-id="<?= $product->id?>"
+            data-product-attribute-id="<?= $product_attribute_id;?>"
+            data-product-attribute-groups='<?= $product_attribute_groups;?>'
+            data-product-parent-child-combination-ids='[{}]'
+            data-product-attributes='<?= $product_attributes;?>'
+            data-product-price="<?= $product_price;?>"
+            data-product-attribute-price="<?= $attribute_price;?>"
+            data-note=""
+            data-quantity="1"
+            data-discount="">
             <td class="cell-description"><?= $product_label;?></td>
             <td class="cell-quantity">
                 <div class="input-group input-group-sm cell-quantity-input">
@@ -292,9 +299,9 @@ use kartik\select2\Select2;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <span class="btn btn-danger pull-left remove_from_cart_btn" >Remove</span>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
+                    <span class="btn btn-lg btn-danger pull-left remove_from_cart_btn" >Remove</span>
+                    <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-lg btn-primary" value="Save"/>
                 </div>
             </form>
         </div>
@@ -331,9 +338,9 @@ use kartik\select2\Select2;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <span class="pull-left btn btn-default no_discount_btn">Clear Discount</span>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
+                    <span class="pull-left btn btn-lg btn-default no_discount_btn">Clear Discount</span>
+                    <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-lg btn-primary" value="Save"/>
                 </div>
             </form>
         </div>
@@ -370,9 +377,9 @@ use kartik\select2\Select2;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <span class="pull-left btn btn-default no_tax_btn">Clear Tax</span>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
+                    <span class="pull-left btn btn-lg btn-default no_tax_btn">Clear Tax</span>
+                    <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-lg btn-primary" value="Save"/>
                 </div>
             </form>
         </div>
@@ -380,7 +387,7 @@ use kartik\select2\Select2;
 </div>
 
 <!-- MODAL of Product Addition -->
-<div class="modal" id="add_product_modal" role="dialog">
+<div class="modal" id="add_product_modal" role="dialog" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -395,14 +402,14 @@ use kartik\select2\Select2;
                             <?= Select2::widget([
                                 'name' => 'product_name',
                                 'data' => $products_as_array,
-                                'options' => ['placeholder' => 'Search Product']
+                                'options' => ['placeholder' => 'Search Product', 'class' => 'btn-lg'],
                             ]);?>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Add to Cart" />
+                    <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-lg btn-primary" value="Add to Cart" />
                 </div>
             </form>
         </div>
@@ -502,8 +509,8 @@ use kartik\select2\Select2;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
+                    <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-lg btn-primary" value="Save"/>
                 </div>
             </form>
         </div>
