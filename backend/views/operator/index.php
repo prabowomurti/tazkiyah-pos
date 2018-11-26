@@ -95,7 +95,7 @@ use kartik\select2\Select2;
                             <td colspan="3"><hr /></td>
                         </tr>
                         <tr>
-                            <td colspan="3" style="text-align:center;">Outlet Nirwana <br />Jalan Nirwana 21B Semarang <br />555-0919</td>
+                            <td colspan="3" style="text-align:center;"><?= \common\models\Setting::t('app_name');?><br /><?= \common\models\Setting::t('address');?><br /><?= \common\models\Setting::t('phone');?></td>
                         </tr>
                         <tr style="background-color: #DDD">
                             <td colspan="3"></td>
