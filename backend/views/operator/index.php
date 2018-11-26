@@ -360,7 +360,7 @@ use kartik\select2\Select2;
 </div>
 
 <!-- MODAL of Product Addition -->
-<div class="modal" id="add_product_modal" role="dialog" tabindex="-1">
+<div class="modal" id="add_product_modal" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -376,6 +376,9 @@ use kartik\select2\Select2;
                                 'name' => 'product_name',
                                 'data' => $products_as_array,
                                 'options' => ['placeholder' => 'Search Product', 'class' => 'btn-lg'],
+                                'pluginOptions' => [
+                                    'allowClear' => true
+                                ]
                             ]);?>
                         </div>
                     </div>
