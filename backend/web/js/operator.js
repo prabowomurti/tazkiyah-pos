@@ -781,8 +781,20 @@ $(document).ready(function () {
         $('.subheader').after(item_rows);
 
         $('.receipt_subtotal').text($('#subtotal').text());
-        $('.receipt_discount').text('-' + $('#discount').text());
-        $('.receipt_tax').text($('#tax').text());
+
+        // hide tax and discount if 0
+        $('.receipt_discount').parent().hide();
+        if ($('#discount').attr('data-value') > 0)
+        {
+            $('.receipt_discount').text('-' + $('#discount').text()).parent().show();
+        }
+
+        $('.receipt_tax').parent().hide();
+        if ($('#tax').attr('data-value') > 0)
+        {
+            $('.receipt_tax').text($('#tax').text()).parent().show();
+        }
+        
         $('.receipt_total').text($('#total').text());
 
         $('.receipt_panel').show();
