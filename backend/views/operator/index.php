@@ -51,7 +51,7 @@ use kartik\select2\Select2;
                     <tbody>
                         <tr class="subheader">
                             <td colspan="2">
-                                Order #<span class="receipt_number"></span><br />
+                                #<span class="receipt_number"></span><br />
                                 <span class="receipt_current_time" id="receipt_current_time"></span>
                             </td>
                             <td class="text-right">
@@ -98,10 +98,10 @@ use kartik\select2\Select2;
         <div class="col-xs-4 summary">
             <div class="col-xs-12 customer">
                 <div class="col-xs-11 customer_detail" data-customer-id="">Select Customer</div>
-                <div class="col-xs-1 add_customer">
-                    <span class="fa-stack">
+                <div class="col-xs-1 master_menu_button">
+                    <span class="fa-stack" title="Master Menu">
                         <i class="fa fa-circle fa-stack-2x fa-inverse"></i>
-                        <i class="fa fa-plus fa-stack-1x"></i>
+                        <i class="fa fa-align-justify fa-stack-1x"></i>
                     </span>
                 </div>
             </div>
@@ -228,6 +228,51 @@ use kartik\select2\Select2;
     
 </div>
 <!-- /ORDER -->
+
+<div class="modal" id="master_menu_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title text-center">Master Menu</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <span class="btn btn-sm btn-block btn-default master_menu">Order History</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <span class="btn btn-sm btn-block btn-default master_menu add_customer">Add New Customer</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <span class="btn btn-sm btn-block btn-default master_menu">More... </span>
+                    </div>
+                    <div class="col-sm-3">
+                        <span class="btn btn-sm btn-block btn-default master_menu">Feature... </span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-3">
+                        <span class="btn btn-sm btn-block btn-default master_menu">is...</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <span class="btn btn-sm btn-block btn-default master_menu">Coming...</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <span class="btn btn-sm btn-block btn-default master_menu">Soon...</span>
+                    </div>
+                    <div class="col-sm-3">
+                        <span class="btn btn-sm btn-block btn-default master_menu">(well, not so soon)</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="/site/logout" data-method="post" class="btn btn-danger">LOG OUT</a>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- MODAL of .CART-ITEM EDIT -->
 <div class="modal" id="edit_item_options_modal" tabindex="-1" role="dialog">
@@ -374,7 +419,7 @@ use kartik\select2\Select2;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-lg btn-default pull-left" data-dismiss="modal">Close</button>
                     <input type="submit" class="btn btn-lg btn-primary" value="Add to Cart" />
                 </div>
             </form>

@@ -51,6 +51,15 @@
     height: 100%;
 }
 
+/* -=-=-=-=-=-= MASTER MENU -=-=-=-=-=-=*/
+#master_menu_modal .master_menu {
+    height: 42px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    line-height: 16px;
+}
+
+
 /* -=-=-=-=-=-= CART -=-=-=-=-=-=*/
 /* temporary hack */
 /*
@@ -222,7 +231,7 @@
     cursor: pointer;
     text-decoration: underline;
 }
-.customer .add_customer {
+.master_menu_button {
     text-align: right;
     padding-left: 0px;
     padding-right: 0px;

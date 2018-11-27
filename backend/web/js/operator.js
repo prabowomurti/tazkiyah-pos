@@ -241,8 +241,18 @@ $(document).ready(function () {
         return false;
     });
 
+
+    // --------- SHOW MASTER MENU -----------
+    $('.summary .master_menu_button').on('click', function () {
+        showMasterMenu();
+    });
+
+    function showMasterMenu(){
+        $('#master_menu_modal').modal();
+    }
+
     // --------- SHOW ADD CUSTOMER MODAL -----------
-    $('.summary .add_customer').on('click', function () {
+    $('.add_customer').on('click', function () {
         $('#add_customer_modal').modal();
         $('#customer_name').focus();
     });
@@ -277,6 +287,7 @@ $(document).ready(function () {
         });
 
         $('#add_customer_modal').modal('hide');
+        $('#master_menu_modal').modal('hide');
         
         return false;
     });
