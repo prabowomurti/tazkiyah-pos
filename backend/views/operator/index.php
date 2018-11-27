@@ -17,16 +17,6 @@ use kartik\select2\Select2;
 
 <!-- ORDER -->
 <div id="order" class="tab-pane active">
-    <!-- <div class="col-lg-3 col-md-2 col-sm-2 col-xs-4">
-        <span class="btn btn-primary btn-md">Add Order</span>
-    </div>
-    <div class="col-lg-9 col-md-10 col-sm-10 col-xs-8 pull-right">
-        <div class="input-group input-group-md">
-            <input type="text" class="form-control" placeholder="Customer Name, Order ID, or Code">
-            <span class="input-group-addon">Search !</span>
-        </div>
-    </div>
-    <div class="clearfix"></div> -->
 
     <!-- .products -->
 

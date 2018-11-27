@@ -35,7 +35,7 @@ $bundle = common\components\assets\Asset::register($this);
 <div class="container">
     <div class="main_container">
         <!-- .left-menu -->
-        <div class="col-lg-1 col-md-4 col-sm-12 col-xs-12 left-menu">
+        <!-- <div class="col-lg-1 col-md-4 col-sm-12 col-xs-12 left-menu">
             <div class="nav nav-tabs">
                 <div class="operator-menu col-lg-12 col-md-12 col-sm-4 col-xs-4">
                     <a href="#home" data-toggle="tab" aria-expanded="false">
@@ -61,12 +61,14 @@ $bundle = common\components\assets\Asset::register($this);
                     <span class="fa fa-align-justify"></span><span id="current_time" class="pull-right"></span>
                 </div>
             </div>
-        </div>
+        </div> -->
         <!-- /.left-menu -->
 
-        <div class="col-lg-11 col-md-8 col-sm-12 col-xs-12 right-content tab-content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 right-content tab-content">
             <?= $content;?>
         </div>
+
+        <span id="current_time" class="hide"></span>
     </div>
 </div>
 
