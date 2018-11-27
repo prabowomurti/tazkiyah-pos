@@ -415,9 +415,9 @@ use kartik\select2\Select2;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <span class="pull-left btn btn-default clear_customer">Clear</span>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
+                    <span class="pull-left btn btn-lg btn-default clear_customer">Clear</span>
+                    <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-lg btn-primary" value="Save"/>
                 </div>
             </form>
         </div>
@@ -459,8 +459,8 @@ use kartik\select2\Select2;
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" class="btn btn-primary" value="Save"/>
+                    <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-lg btn-primary" value="Save"/>
                 </div>
             </form>
         </div>
