@@ -174,6 +174,10 @@
 .add_product {
     text-align: center !important;
     cursor: pointer;
+    background-color: #2A3F54;
+    color: white;
+    letter-spacing: 4px;
+    font-weight: 300;
 }
 /* -=-=-=-=-=-= RECEIPT -=-=-=-=-=-=*/
 .receipt tbody {

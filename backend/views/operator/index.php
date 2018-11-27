@@ -34,8 +34,8 @@ use kartik\select2\Select2;
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="row-add_product">
-                            <td colspan="5" class="add_product">Add Product</td>
+                        <tr class="row-add_product" >
+                            <td colspan="5" class="add_product">ADD PRODUCT</td>
                         </tr>
                     </tbody>
                 </table>
@@ -410,7 +410,7 @@ use kartik\select2\Select2;
                             <?= Select2::widget([
                                 'name' => 'product_name',
                                 'data' => $products_as_array,
-                                'options' => ['placeholder' => 'Search Product', 'class' => 'btn-lg'],
+                                'options' => ['placeholder' => 'Search Product', 'class' => 'btn-lg', 'id' => 'add_product_select2'],
                                 'pluginOptions' => [
                                     'allowClear' => true
                                 ]

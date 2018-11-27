@@ -15,6 +15,8 @@ $(document).ready(function () {
     // --------------- SHOW PRODUCT SEARCH MODAL ---------------
     $('.row-add_product').click(function () {
         $('#add_product_modal').modal();
+        // this will open the select2 and focus the search bar
+        $('#add_product_select2').select2('open');
     });
     // --------------- INPUT PRODUCT TO THE CART FROM SEARCH MODAL ---------------
     $('#form_add_product').submit(function () {
