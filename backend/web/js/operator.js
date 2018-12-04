@@ -492,6 +492,10 @@ $(document).ready(function () {
         cart_item.children('.cell-subtotal').text(formatCurrency(unit_price));
 
         cart_item.clone(true).insertBefore('.row-add_product').hide().fadeIn(350);
+
+        // make sure the "Add Product" button will always shown
+        $('.row-add_product').get(0).scrollIntoView();
+
         calculateTotal();
     }
 
