@@ -182,7 +182,7 @@ use kartik\select2\Select2;
 
                 $product_attribute_groups = json_encode($product->getAttributeGroups());
 
-                $first_attribute = $product->productAttributes{0};
+                $first_attribute = $product->productAttributes[0];
                 $product_attribute_id = $first_attribute->id;
                 $attribute_price = $first_attribute->price;
                 $product_price += $attribute_price;
